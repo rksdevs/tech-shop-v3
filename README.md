@@ -1,6 +1,6 @@
-**E-Commerce Website Specialy Tailored For Computer Needs Version - 2**
+**AI Powered E-Commerce Website For Computer Needs**
 
-**Site is live on Render** -- Pending
+**Live Website** -- rksdevs.in
 
 **Stack & Library Details**
 
@@ -22,15 +22,13 @@
 6. From the root folder - run command - npm run dev
 
 **Feature lists and their status**
-1. Basic e-commerce process - Add to cart > Proceed to checkout > Add shipping address > Select Payment method > Place order --- At this point order is created and saved in the user profile. The users can view the order details from the profile page - **Completed**
-2. Payment Gateway Integration - (2 Entry points - one from regular checkout process listed above, another from profile details order > details page)On Pay Now CTA - Payment through Razorpay API - **Completed**
-3. Payment Gateway Features -- Payment Success/Failure - notifications to customer, payment refunds -- **Pending**
-4. Shipping Features -- Admin can mark an order to Delivered -- **Completed**
-5. Shipping Features -- Add shippment tracking number/waybill number to order, notification on item shipped or delivered -- **Pending**
-6. Admin Features -- Add/Delete/Update Products, Users, Orders -- **Completed**
-7. Custom PC Building Feature -- Configure own pc parts, select from available items, delete, edit items from the list, add all to cart -- **Completed**
-8. Nav bar with Category selection, pages with category wise products to display -- **Pending**
-9. Sorting, Filtering, Searching Products on Products page, on Custom PC Building Page -- **Pending**
-10. Update Stock on Order Placement/Order Payment -- ~~**Pending -- Important**~~ **Completed**
-12. Code refractoring - Check and apply DRY principles, check for memory leaks, apply memoization where needed -- **Pending**
-13. Write Unit Test -- **Pending** 
+1. End to end E-commerce features, starting from Product listing to placing order with payment.
+2. Complete Admin solutions -- All crud operations for products, users, offers, orders, prebuilt PCs.
+3. Razorpay Payment gateway to cater all the payment needs.
+4. Shipping & Tracking Features -- Bundled with Ship Rocket API to create shiprocket orders for shipping in just a few clicks. 
+5. AI Features - Custom AIs powered by latest Chat GPT 4 Omni models. Prediction of PC performances, Suggestion of Prebuilt PCs based on needs, Compatibility checkers.
+6. Custom PC Building Feature -- Configure your own PCs and check their performane, and compatibility.
+7. Easy Navigation & Filters -- Server side Category navigation with Client side filters for easy and smooth navigation and filtering.
+8. All types of Sorting included along with Out of Stock filters.
+9. Real time order updates, and stock updates before payments to handle concurrency.
+10. Several other quality of life features including - Newsletters, Creation and application of offers by Admins, Google O Auth with Firebase, AWS S3 bucket for storage solution and much more.
