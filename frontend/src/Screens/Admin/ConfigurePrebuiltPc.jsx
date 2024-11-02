@@ -166,7 +166,7 @@ const ConfigurePrebuiltPc = ({ children }) => {
 
   const handleMerlinQuery = async (e) => {
     e.preventDefault();
-    console.log("Hi I'm Merlin!");
+    console.log("Hi I'm HALO!");
   };
 
   const handleDeleteSelection = (item) => {

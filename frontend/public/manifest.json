@@ -1,6 +1,6 @@
 {
-  "short_name": "Tech-Shop",
-  "name": "Tech-Shop - Ecommerce",
+  "short_name": "React App",
+  "name": "Create React App Sample",
   "icons": [
     {
       "src": "C-favicon.ico",

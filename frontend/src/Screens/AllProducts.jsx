@@ -469,16 +469,6 @@ const AllProducts = () => {
                   <legend className="-ml-1 px-1 text-sm font-medium">
                     Categories
                   </legend>
-                  {/* <Button
-                    size="sm"
-                    variant={`${!categoryFilter.length ? "outline" : ""}`}
-                    className="flex justify-evenly"
-                    onClick={(e) => handleFilter(e)}
-                  >
-                    <span className="text-sm">
-                      {!categoryFilter.length ? "Filters" : "Click To Apply"}
-                    </span>{" "}
-                  </Button> */}
                   {allCategories?.length && (
                     <CategoriesComponent allCategories={allCategories} />
                   )}
@@ -487,16 +477,6 @@ const AllProducts = () => {
                   <legend className="-ml-1 px-1 text-sm font-medium">
                     Brands
                   </legend>
-                  {/* <Button
-                    variant={`${!brandFilter.length ? "outline" : ""}`}
-                    size="sm"
-                    className="flex justify-evenly"
-                    onClick={(e) => handleFilter(e)}
-                  >
-                    <span className="text-sm">
-                      {!brandFilter.length ? "Filters" : "Click To Apply"}
-                    </span>{" "}
-                  </Button> */}
                   {allBrands?.length && (
                     <BrandsComponent allBrands={allBrands} />
                   )}
@@ -505,22 +485,6 @@ const AllProducts = () => {
                   <legend className="-ml-1 px-1 text-sm font-medium">
                     Price
                   </legend>
-                  {/* <Button
-                    variant={`${
-                      !priceFilter.length || priceFilter[0] === 0
-                        ? "outline"
-                        : ""
-                    }`}
-                    size="sm"
-                    className="flex justify-evenly"
-                    onClick={(e) => handleFilter(e)}
-                  >
-                    <span className="text-sm">
-                      {!priceFilter.length || priceFilter[0] === 0
-                        ? "Filters"
-                        : "Click To Apply"}
-                    </span>{" "}
-                  </Button> */}
                   <PriceSlider />
                 </fieldset>
               </form>
@@ -585,7 +549,7 @@ const AllProducts = () => {
             </div>
           </main>
         </div>
-        <div className="banner flex bg-muted max-w-full max-h-[30vh] rounded-md">
+        <div className="banner flex bg-muted max-w-full max-h-[30vh] lg:max-h-[inherit] rounded-md overflow-hidden">
           <div className="image hidden lg:flex flex-1 rounded-l-md">
             <img
               src={saleTwo}
@@ -593,11 +557,12 @@ const AllProducts = () => {
               className="w-full h-full rounded-l-md"
             />
           </div>
-          <div className="content flex flex-col gap-4 flex-1 p-[3.5rem] items-start text-left">
-            <h2 className="tracking-[0.025rem] font-[700] text-[2.5rem] leading-[2.5rem]">
+
+          <div className="content flex flex-col gap-2 flex-1 p-4 lg:p-[3.5rem] items-start text-left overflow-hidden">
+            <h2 className="tracking-[0.025rem] font-[700] text-[1.5rem] lg:text-[2.5rem] leading-[1.75rem] lg:leading-[2.5rem]">
               Newsletter
             </h2>
-            <p className="font-light text-[12px] text-muted-foreground">
+            <p className="font-light text-[10px] lg:text-[12px] text-muted-foreground">
               Subscribe to our letter, get notified about latest offers!
             </p>
             <div className="flex w-full max-w-sm items-center space-x-2">
@@ -611,6 +576,7 @@ const AllProducts = () => {
               <Button onClick={(e) => handleSubscribe(e)}>Subscribe</Button>
             </div>
           </div>
+
           <div className="image hidden lg:flex flex-1 rounded-r-md">
             <img
               src={saleThree}

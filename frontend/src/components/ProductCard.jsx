@@ -31,20 +31,23 @@ const ProductCard = ({
   return (
     <Link to={`/product/${productId}`}>
       <Card
-        className={`relative w-50 h-70 min-h-[310px] max-h-[280px] md:min-h-[310px] md:max-h-[310px] flex flex-col rounded-xl bg-card overflow-hidden border transition-transform transform hover:scale-105 hover:border-gray-300 hover:shadow-lg p-2 text-left relative group ${className}`}
+        // className={`relative w-50 h-70 min-h-[310px] max-h-[280px] md:min-h-[310px] md:max-h-[310px] flex flex-col rounded-xl bg-card overflow-hidden border transition-transform transform hover:scale-105 hover:border-gray-300 hover:shadow-lg p-2 text-left relative group ${className}`}
+        className={`relative w-50 h-auto min-h-[270px] max-h-[calc(100vh-20px)] flex flex-col rounded-xl bg-card overflow-hidden border transition-transform transform hover:scale-105 hover:border-gray-300 p-2 pb-1 text-left relative group ${className}`}
       >
         {isOnOffer && <Badge className="absolute right-3">Offer</Badge>}
-        <img
-          src={
-            image === "/images/sample.jpg" ||
-            image ===
-              "https://computer-makers-products-cpu.s3.ap-south-1.amazonaws.com/woocommerce-placeholder-700x700.png"
-              ? imageToAdd
-              : image
-          }
-          alt="product"
-          className={`h-[145px] object-cover ${imgClass}`}
-        />
+        <div className="flex justify-center items-center">
+          <img
+            src={
+              image === "/images/sample.jpg" ||
+              image ===
+                "https://computer-makers-products-cpu.s3.ap-south-1.amazonaws.com/woocommerce-placeholder-700x700.png"
+                ? imageToAdd
+                : image
+            }
+            alt="product"
+            className={`h-[138px] object-cover ${imgClass}`}
+          />
+        </div>
         <Badge
           className={`${
             countInStock === 0 ? "absolute top-2 left-2" : "hidden"
@@ -67,11 +70,11 @@ const ProductCard = ({
           }`}
         >
           {!isOnOffer && productDiscount > 0 && countInStock > 0
-            ? "Discount"
+            ? `${productDiscount.toFixed(0)}% Off`
             : ""}
         </Badge>
         <CardContent
-          className={`p-4 flex flex-col justify-between ${cardContentClass}`}
+          className={`p-4 py-2 flex flex-col justify-between ${cardContentClass}`}
         >
           <div className="">
             <div>
@@ -83,7 +86,7 @@ const ProductCard = ({
               <h2
                 className={`text-[12px] font-bold transition-colors group-hover:text-primary group-hover:underline ${nameClass}`}
               >
-                {name?.length > 20 ? `${name?.substring(0, 20)}...` : name}
+                {name?.length > 17 ? `${name?.substring(0, 17)}...` : name}
               </h2>
             </div>
             <div className={`flex items-center mt-2 ${sectionClass}`}>
@@ -97,9 +100,9 @@ const ProductCard = ({
                   />
                 ))}
               </div>
-              <div className={`text-sm text-gray-500 ml-2 ${numReviewsClass}`}>
+              {/* <div className={`text-sm text-gray-500 ml-2 ${numReviewsClass}`}>
                 ({ratingCount})
-              </div>
+              </div> */}
             </div>
           </div>
           {productDiscount ? (
@@ -121,7 +124,7 @@ const ProductCard = ({
             </div>
           ) : (
             <div
-              className={`text-sm md:text-l font-bold mt-2 ${priceClass} absolute bottom-[16px]`}
+              className={`text-sm md:text-l font-bold mt-1 ${priceClass} absolute bottom-[16px]`}
             >
               {price === 0 ? "Not Available" : `₹ ${Number(price).toFixed(2)}`}
             </div>

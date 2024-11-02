@@ -5,12 +5,11 @@ const getChannelVideos = asyncHandler(async(req,res)=>{
     try {
         const response = await axios.get('https://www.googleapis.com/youtube/v3/search', {
           params: {
-            part: 'snippet',
-            channelId: process.env.CHANNEL_ID,
-            maxResults: 10,
-            order: 'date',
-            type: 'video',
             key: process.env.YOUTUBE_DATA_V3_KEY,
+            channelId: process.env.CHANNEL_ID,
+            part: 'snippet',
+            order: 'date',
+            maxResults: 10,
           },
         });
     

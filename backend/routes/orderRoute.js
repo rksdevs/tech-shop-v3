@@ -1,6 +1,6 @@
 import express from "express";
 import {protect, admin} from "../middlewares/authMiddleware.js";
-import {addOrderItems, getMyOrders, getOrderById, updateOrderToPaid, updateOrderToDelivered, getAllOrders, updateOrderToShipped, uploadBill, addBillToOrder, updateOrderwithBill, updateOrderToCancelled} from "../controller/orderController.js"
+import {addOrderItems, getMyOrders, getOrderById, updateOrderToPaid, updateOrderToDelivered, getAllOrders, updateOrderToShipped, uploadBill, addBillToOrder, updateOrderwithBill, updateOrderToCancelled, updateOrderToPaidManually} from "../controller/orderController.js"
 
 const router = express.Router();
 
@@ -15,6 +15,9 @@ router.get('/:id', protect, getOrderById);
 
 //update order to paid
 router.put('/:id/pay', protect, updateOrderToPaid);
+
+//update order to paid
+router.put('/:id/admin-manual-pay', protect, admin, updateOrderToPaidManually);
 
 //update order to delivered
 router.put('/:id/deliver', protect, admin, updateOrderToDelivered);

@@ -189,17 +189,19 @@ const ProductScreen = () => {
               <Dialog>
                 <DialogTrigger asChild>
                   <div>
-                    <img
-                      src={
-                        product?.image === "/images/sample.jpg" ||
-                        product?.image ===
-                          "https://computer-makers-products-cpu.s3.ap-south-1.amazonaws.com/woocommerce-placeholder-700x700.png"
-                          ? imageToAdd
-                          : product?.image
-                      }
-                      alt="product-img"
-                      className="w-[500px] h-auto md:h-[350px] cursor-pointer"
-                    />
+                    <div className="flex justify-center items-center max-w-[300px]">
+                      <img
+                        src={
+                          product?.image === "/images/sample.jpg" ||
+                          product?.image ===
+                            "https://computer-makers-products-cpu.s3.ap-south-1.amazonaws.com/woocommerce-placeholder-700x700.png"
+                            ? imageToAdd
+                            : product?.image
+                        }
+                        alt="product-img"
+                        className=" cursor-pointer"
+                      />
+                    </div>
                     <Badge
                       className={`${
                         product?.countInStock === 0
@@ -232,12 +234,17 @@ const ProductScreen = () => {
                       {!product?.isOnOffer &&
                       product?.productDiscount > 0 &&
                       product?.countInStock > 0
-                        ? "Discount"
+                        ? `${product?.productDiscount.toFixed(0)}% Off`
                         : ""}
                     </Badge>
                   </div>
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-md">
+                  <DialogTitle>
+                    {product?.name?.length > 35
+                      ? `${product?.name?.substring(0, 35)}...`
+                      : product?.name}
+                  </DialogTitle>
                   <div className="flex items-center space-x-2">
                     <img
                       src={
@@ -258,48 +265,6 @@ const ProductScreen = () => {
                   </DialogFooter>
                 </DialogContent>
               </Dialog>
-              {/* <img
-                src={
-                  product?.image === "/images/sample.jpg"
-                    ? imageToAdd
-                    : product?.image
-                }
-                alt="product-img"
-                className="w-[500px] h-auto md:h-[350px]"
-              />
-              <Badge
-                className={`${
-                  product?.countInStock === 0
-                    ? "absolute top-0 left-0"
-                    : "hidden"
-                }`}
-              >
-                {product?.countInStock === 0 ? "Out of Stock" : ""}
-              </Badge>
-              <Badge
-                className={`${
-                  product?.isOnOffer && product?.countInStock > 0
-                    ? "absolute top-0 left-0"
-                    : "hidden"
-                }`}
-              >
-                {product?.isOnOffer && product?.countInStock > 0 ? "Offer" : ""}
-              </Badge>
-              <Badge
-                className={`${
-                  !product?.isOnOffer &&
-                  product?.productDiscount > 0 &&
-                  product?.countInStock > 0
-                    ? "absolute top-0 left-0"
-                    : "hidden"
-                }`}
-              >
-                {!product?.isOnOffer &&
-                product?.productDiscount > 0 &&
-                product?.countInStock > 0
-                  ? "Discount"
-                  : ""}
-              </Badge> */}
             </div>
             <div className="product-services flex justify-between">
               <div className="flex items-start gap-4 text-left">
@@ -307,7 +272,7 @@ const ProductScreen = () => {
                 <div className="grid gap-1">
                   <p className="text-xs font-medium leading-none">Secure</p>
                   <p className="text-xs text-muted-foreground">
-                    Certified marketplace since 2010
+                    Certified marketplace since 2007
                   </p>
                 </div>
               </div>
@@ -337,9 +302,9 @@ const ProductScreen = () => {
                     </div>
                   ))}
                 </div>
-                <div className="text-sm text-gray-500 ml-2">
+                {/* <div className="text-sm text-gray-500 ml-2">
                   ({product?.numReviews})
-                </div>
+                </div> */}
               </div>
               <div className="flex items-center mt-2 font-bold text-l text-left pb-2 border-b">
                 {product?.name}
@@ -348,7 +313,7 @@ const ProductScreen = () => {
                 <div className="flex items-center mt-2 font-extrabold text-left text-[2rem] pt-2 text-primary flex gap-4">
                   {product?.currentPrice === 0
                     ? "Not Available"
-                    : `₹ ${product?.currentPrice}`}
+                    : `₹ ${product?.currentPrice.toFixed(0)}`}
                   <span className="font-semibold text-muted-foreground text-base line-through pt-4">
                     {" "}
                     {product?.price === 0

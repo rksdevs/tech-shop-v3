@@ -28,6 +28,28 @@
   color: #61dafb;
 }
 
+.react-markdown {
+  p, ul, li {
+    font-weight: 300;
+    font-size: 14px;
+  }
+  p {
+    margin-top: 5px;
+  }
+
+
+  ul {
+    margin-top: 5px;
+    list-style: circle;
+    padding-left: 20px;
+  }
+
+
+  h2, h3 {
+    margin-top: 10px;
+  }
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

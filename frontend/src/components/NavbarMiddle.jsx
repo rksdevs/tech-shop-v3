@@ -14,7 +14,7 @@ import { Badge } from "./ui/badge";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import { useLogoutMutation } from "../Features/usersApiSlice";
+import { useLogoutMutation, usersApiSlice } from "../Features/usersApiSlice";
 import { logout } from "../Features/authSlice";
 import { useSearchProductsMutation } from "../Features/productApiSlice";
 import { Label } from "./ui/label";
@@ -36,6 +36,7 @@ import {
 } from "./ui/sheet";
 import { DialogDescription, DialogHeader, DialogTitle } from "./ui/dialog";
 import { setOrderType } from "../Features/orderTypeSlice";
+import { deleteMessages } from "../Features/messageSlice";
 
 export function NavbarMiddle() {
   const navigate = useNavigate();
@@ -54,6 +55,7 @@ export function NavbarMiddle() {
     e.preventDefault();
     try {
       await logoutApiCall().unwrap();
+      dispatch(deleteMessages());
       dispatch(logout());
       setOpen(false);
       navigate("/login");
@@ -92,6 +94,13 @@ export function NavbarMiddle() {
     }
   }, [keyword]);
 
+  // useEffect(() => {
+  //   console.log(userInfo);
+  //   if (userInfo?.data?.isAdmin) {
+  //     console.log("addmin");
+  //   }
+  // }, []);
+
   return (
     <div className="flex w-full flex-col">
       <header className="sticky top-0 flex h-14 items-center justify-center gap-4 bg-background lg:px-4 md:px-6 sm:px-0">
@@ -99,7 +108,7 @@ export function NavbarMiddle() {
           <div className="flex w-full items-center flex-row">
             <Link to="/">
               <h2 className="text-[20px] md:text-[24px] font-semibold flex flex-row items-center">
-                Tech-Shop
+                COMPUTERMAKERS
                 <div className="text-primary text-[48px] mt-[5px] flex h-[50px] items-end">
                   .
                 </div>
@@ -151,7 +160,7 @@ export function NavbarMiddle() {
                 ""
               )}
             </form>
-            {userInfo && userInfo.isAdmin && (
+            {userInfo && userInfo?.data?.isAdmin && (
               <>
                 <DropdownMenu>
                   <DropdownMenuTrigger

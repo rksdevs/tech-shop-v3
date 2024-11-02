@@ -365,7 +365,7 @@ function sendOTPEmail(email, otp, name) {
     let mailOptions = {
         from: process.env.GOOGLE_USER_EMAIL,
         to: email,
-        subject: 'Tech-Shop Password Reset OTP',
+        subject: 'Computermakers Password Reset OTP',
         text: `Hi ${name}, your OTP for password reset is: ${otp}. Please use it within 10 minutes. This email address is not monitored, please do not reply you will not receive any response.`
     };
 

@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import Offer from "./offerModel.js";
 
 const reviewSchema = new mongoose.Schema({
     user: {
@@ -54,7 +55,7 @@ const productSchema = new mongoose.Schema({
     rating: {
         type: Number,
         required: true,
-        default: 0
+        default: 5
     },
     numReviews: {
         type: Number,
@@ -204,12 +205,31 @@ const productSchema = new mongoose.Schema({
     otherFeatures: [{type:String}]
 }, { timestamps: true });
 
-productSchema.pre('save', function (next) {
+productSchema.pre('save', async function (next) {
     if (this.productDiscount > 0) {
         this.currentPrice = this.price - (this.price * this.productDiscount / 100);
-    } else {
+    } else if (this.currentPrice === 0 || this.currentPrice == null || !this.currentPrice || this.productDiscount === 0 || this.productDiscount < 0) {
         this.currentPrice = this.price;
     }
+
+    if (this.productDiscount === 0) {
+        this.isOnOffer = false;
+        this.offerName = "";
+    }
+
+    // if (this.productDiscount > 0 && !this.isOnOffer) {
+    //     this.currentPrice = this.price - (this.price * this.productDiscount / 100);
+    // } else if (this.isOnOffer && this.offerName) {
+    //     const offer = await Offer.findOne({ offerName: this.offerName });
+    //     if (offer && offer.offerDiscount) {
+    //         this.productDiscount = offer.offerDiscount;
+    //         this.currentPrice = this.price - (this.price * offer.offerDiscount / 100);
+    //     }
+    // } else {
+    //     this.currentPrice = this.price;
+    // }
+
+    //calculate discount based on the price diff between sell price and mrp
 
     // Sanitize specificationDetails fields to ensure they are strings
     const fieldsToSanitize = ['moboBIOS', 'moboFormFactor', 'moboOS'];

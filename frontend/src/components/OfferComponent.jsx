@@ -29,9 +29,12 @@ const OfferComponent = ({ offer }) => {
         </div>
       </div>
       <Carousel className="w-full">
-        <CarouselContent className="-ml-1 h-[38vh] md:h-[43vh] pt-5">
+        <CarouselContent className="-ml-1 pt-5 md:pt-0">
           {products?.productData?.map((product, index) => (
-            <CarouselItem key={index} className="pl-1 basis-1/2 lg:basis-1/5">
+            <CarouselItem
+              key={index}
+              className="pl-1 basis-1/2 lg:basis-1/5 p-1"
+            >
               <div className="p-1">
                 <ProductCard
                   category={product?.category}
@@ -52,6 +55,34 @@ const OfferComponent = ({ offer }) => {
         <CarouselPrevious className="left-[-15px]" />
         <CarouselNext className="right-[-15px]" />
       </Carousel>
+      {/* <Carousel className="w-full overflow-x-hidden">
+        <CarouselContent className="-ml-1 pt-5 md:pt-0">
+          {products?.productData?.map((product, index) => (
+            <CarouselItem
+              key={index}
+              className="pl-1 basis-1/2 md:basis-1/5 lg:basis-1/5 p-1"
+            >
+              <div className="p-1">
+                <ProductCard
+                  category={product?.category}
+                  countInStock={product?.countInStock}
+                  name={product?.name}
+                  rating={product?.rating}
+                  ratingCount={product?.numReviews}
+                  price={product?.price}
+                  productId={product?._id}
+                  productDiscount={product?.productDiscount}
+                  isOnOffer={product?.isOnOffer}
+                  currentPrice={product?.currentPrice}
+                  image={product?.image}
+                />
+              </div>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+        <CarouselPrevious className="flex left-0 top-[12rem]" />
+        <CarouselNext className="flex right-0 top-[12rem]" />
+      </Carousel> */}
     </div>
   );
 };

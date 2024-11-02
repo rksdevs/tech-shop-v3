@@ -157,7 +157,7 @@ export const getPredictionFromExistingPc = asyncHandler(async(req,res)=>{
       await user.save();
       res.status(200).json({performanceDetails: response.choices[0].message.content, pcName: configurationName, gptRequestCount: user?.gptRequestCount})
       } else {
-        res.status(200).json({performanceDetails: `There are no prebuilt configurations available within the selected budget range of ${Number(budget) - 20000} to ${Number(budget) + 20000} INR. Please modify your budget for Merlin to choose the right Prebuilt PC for you.`, pcName: "NA", gptRequestCount: user?.gptRequestCount})
+        res.status(200).json({performanceDetails: `There are no prebuilt configurations available within the selected budget range of ${Number(budget) - 20000} to ${Number(budget) + 20000} INR. Please modify your budget for HALO to choose the right Prebuilt PC for you.`, pcName: "NA", gptRequestCount: user?.gptRequestCount})
       }
     } else {
       res.status(404).json({ error: "No available pre-built pc, please try again later" });
@@ -230,7 +230,7 @@ export const getCompatibilityPrediction = asyncHandler(async(req,res)=>{
     //     // console.log(prebuiltPcDetails)
       
     //   } else {
-    //     res.status(200).json({performanceDetails: `There are no prebuilt configurations available within the selected budget range of ${Number(budget) - 20000} to ${Number(budget) + 20000} INR. Please modify your budget for Merlin to choose the right Prebuilt PC for you.`, pcName: "NA", gptRequestCount: user?.gptRequestCount})
+    //     res.status(200).json({performanceDetails: `There are no prebuilt configurations available within the selected budget range of ${Number(budget) - 20000} to ${Number(budget) + 20000} INR. Please modify your budget for HALO to choose the right Prebuilt PC for you.`, pcName: "NA", gptRequestCount: user?.gptRequestCount})
     //   }
     // } else {
     //   res.status(404).json({ error: "No available pre-built pc, please try again later" });
@@ -242,3 +242,169 @@ export const getCompatibilityPrediction = asyncHandler(async(req,res)=>{
 
   
 })
+
+//create assistant
+const createAssistant= asyncHandler(async()=> {
+  const halo = await openai.beta.assistants.create({
+    name: "HALO",
+    instructions: "You are a expert computer enthusiast and your name is HALO. You have wide knowledge on computer components, laptops and their uses. Your primary role is to help users by suggesting them computer parts, configurations, laptops based on their needs. You will always show the price based on Indian Rupee currency, and you will always advise the users to get more information from computermakers.in website and strictly mention no other websites.",
+    model: "gpt-4o-mini"
+  });
+  console.log("assistant id:", halo)
+  return halo;
+})
+
+// POST route to send message and initiate the assistant thread
+export const sendMessage = asyncHandler(async (req, res) => {
+  try {
+    const { messageFromUser } = req.body;
+    const now = new Date();
+    const user = await User.findById(req.user?._id);
+    let resetThreadId = false;
+    let threadId;
+    let thread;
+    let deleteLocalStorage = false;
+    let message;
+
+    //delete thread
+    // const deleteThreadOnce = await openai.beta.threads.del("thread_oYi8Pt8jUThocXHMEriTxpQ8");
+    //   console.log(deleteThreadOnce);
+    // console.log(user)
+
+    //no thread id in query, user logs in after 30 days assume there is an old threadid
+
+    // Check if the user is locked
+    if (user.gptLockUntil && user.gptLockUntil > now) {
+      return res.status(429).json({ message: 'Too many requests. Please try again later.' });
+    }  
+
+    // Reset the request count if the last request was more than an 30 days
+    if (user.gptLastRequest && now - user.gptLastRequest > 30 * 24 * 60 * 60 * 1000) {
+      user.gptRequestCount = 15;
+      if(!user.isAdmin && user.threadId) {
+      //reset thread Id every 30 days only for non-admin users
+        resetThreadId = true;
+      }
+    }
+
+    // Decrement the request count for non-admin users
+    if(!user?.isAdmin) {
+      user.gptRequestCount = (user.gptRequestCount || 15) - 1;
+      user.gptLastRequest = now;
+      console.log("reduced gpt count by 1")
+    }
+
+    // Lock the user if they have exceeded the limit
+    if (user.gptRequestCount === 0) {
+      user.gptLockUntil = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000); // Lock for 30 days
+      user.threadId = "";
+      //delete thread
+      await openai.beta.threads.del(threadId);
+      await user.save();
+      return res.status(429).json({ message: 'Too many requests. Please try again later.' });
+    }
+
+    if (!threadId) {
+      // console.log("here now")
+      //reset thread Id every 30 days
+      if (resetThreadId) {
+        // when resetThreadId is true basically every 30 days
+        // console.log("block 1");
+        thread = await openai.beta.threads.create();
+        threadId = thread.id;
+        deleteLocalStorage = true;
+      }
+      if(!user?.threadId) {
+        // No existing thread or user wants to start a new one
+        // console.log("block 2");
+        thread = await openai.beta.threads.create();
+        threadId = thread.id;
+        deleteLocalStorage = true;
+      } else {
+        //check if the existing user's thread id is valid
+        threadId = user.threadId;
+        // Send the user's message to the assistant thread
+        try {
+          message = await openai.beta.threads.messages.create(threadId, {
+            role: 'user',
+            content: messageFromUser
+          });
+        } catch (error) {
+          // console.log("error new", error)
+          thread = await openai.beta.threads.create();
+          threadId = thread.id;
+          deleteLocalStorage = true;
+        }
+      }
+      // Save the new threadId in the user's account
+      user.threadId = threadId;
+      await user.save();
+    }
+  
+
+    //if the message has not yet been created because of the above scenarios create one
+    if(!message) {
+      message = await openai.beta.threads.messages.create(threadId, {
+        role: 'user',
+        content: messageFromUser
+      });
+    }
+
+    let infoToSend = {
+      threadId,
+      content: {
+        role: "user",
+        value: messageFromUser
+      },
+      deleteLocalStorage,
+      gptRequestCount: user?.gptRequestCount,
+    }
+
+    // Acknowledge that the message was successfully sent
+    res.status(200).json({ message: 'Message sent successfully', infoToSend });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Something went wrong' });
+  }
+});
+// GET route to stream the assistant's response
+export const getGuidanceOnChat = asyncHandler(async (req, res) => {
+  let assistantId = process.env.OPEN_AI_ASSITANT_ID;
+  // let assistantId = "";
+  // let newAssist = createAssistant();
+  // console.log(newAssist)
+  // console.log(assistantId);
+  let threadId = req.query.threadId;
+  let messageToSend;
+  let messageList;
+  //create the run instance
+  try {
+    const user = await User.findById(req?.user?._id);
+
+    let run = await openai.beta.threads.runs.createAndPoll(
+      threadId,
+      { 
+        assistant_id: assistantId,
+        instructions: `You are a expert computer enthusiast and your name is HALO. You have wide knowledge on computer components, laptops and their uses. Your primary role is to help users by suggesting them computer parts, configurations, laptops based on their needs. You will always show the price based on Indian Rupee currency, and you will always advise the users to get more information from computermakers.in website and strictly mention no other websites. Also please address the user as ${user?.name}`
+      }
+    ); 
+
+    if (run.status === 'completed') {
+      messageList = await openai.beta.threads.messages.list(
+        run.thread_id
+      );
+      for (const message of messageList.data.reverse()) {
+        messageToSend = message.content[0].text.value;
+      }
+    } else {
+      console.log(run.status);
+    }
+    res.status(200).json({ message: messageToSend, content: {
+      role: "assistant",
+      value: messageToSend
+    } });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Something went wrong' });
+  }
+});

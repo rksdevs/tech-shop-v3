@@ -18,7 +18,7 @@ import {
   useGetProductsOnDiscountQuery,
   useGetTopProductsQuery,
 } from "../Features/productApiSlice";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import {
   Carousel,
   CarouselContent,
@@ -45,6 +45,7 @@ const AllOfferScreen = () => {
   const { toast } = useToast();
 
   const [subscriber, setSubscriber] = useState("");
+  const [themeBasedClass, setThemeBasedClass] = useState("");
 
   const {
     data: allOffers,
@@ -91,6 +92,14 @@ const AllOfferScreen = () => {
     navigate("/allProducts");
   };
 
+  useEffect(() => {
+    if (theme === "dark" || theme === "system") {
+      setThemeBasedClass("bg-muted-foreground rounded-md");
+    } else {
+      setThemeBasedClass("");
+    }
+  }, [theme]);
+
   return (
     <div className="flex w-full flex-col gap-6 overflow-hidden mt-4">
       <div className="relative flex flex-col lg:flex-row h-full w-full bg-muted rounded-md mb-4">
@@ -127,7 +136,7 @@ const AllOfferScreen = () => {
           <div className="grid gap-1">
             <p className="text-sm font-medium leading-none">Secure</p>
             <p className="text-sm text-muted-foreground">
-              Certified marketplace since 2010
+              Certified marketplace since 2007
             </p>
           </div>
         </div>
@@ -150,18 +159,21 @@ const AllOfferScreen = () => {
           </div>
         </div>
       </div>
-      <div className="top-rated flex flex-col gap-4">
+      <div className="latest flex flex-col gap-6">
         <div className="flex w-full justify-between items-center">
           <div>
-            <h3 className="text-[24px] font-[700]">Products On Discounts</h3>
+            <h3 className="text-[18px] font-[700]">Products On Discounts</h3>
           </div>
+          <Link to="/allproducts">
+            <Button>View All</Button>
+          </Link>
         </div>
-        <Carousel className="w-full">
-          <CarouselContent className="-ml-1 h-[38vh] md:h-[43vh] pt-5">
+        <Carousel className="w-full overflow-x-hidden">
+          <CarouselContent className="-ml-1 pt-5 md:pt-0">
             {productsOnDiscount?.map((product, index) => (
               <CarouselItem
                 key={index}
-                className="pl-1 basis-1/2 md:basis-1/5 lg:basis-1/5"
+                className="pl-1 basis-1/2 md:basis-1/5 lg:basis-1/5 p-1"
               >
                 <div className="p-1">
                   <ProductCard
@@ -181,8 +193,8 @@ const AllOfferScreen = () => {
               </CarouselItem>
             ))}
           </CarouselContent>
-          <CarouselPrevious className="left-[-15px]" />
-          <CarouselNext className="right-[-15px]" />
+          <CarouselPrevious className="flex left-0 top-[9.5rem]" />
+          <CarouselNext className="flex right-0 top-[9.5rem]" />
         </Carousel>
       </div>
       {allOffers?.length &&
@@ -196,11 +208,11 @@ const AllOfferScreen = () => {
           </div>
         </div>
         <Carousel className="w-full">
-          <CarouselContent className="-ml-1 h-[38vh] md:h-[38vh] pt-5">
+          <CarouselContent className="-ml-1 pt-5 md:pt-0">
             {latestProducts?.map((product, index) => (
               <CarouselItem
                 key={index}
-                className="pl-1 basis-1/2 md:basis-1/5 lg:basis-1/5"
+                className="pl-1 basis-1/2 md:basis-1/5 lg:basis-1/5 p-1"
               >
                 <div className="p-1">
                   <ProductCard
@@ -223,19 +235,17 @@ const AllOfferScreen = () => {
           <CarouselNext className="right-[-15px]" />
         </Carousel>
       </div>
-      <div className="featured-brands flex flex-col gap-6 mb-6">
+      <div className="featured-brands flex flex-col gap-6">
         <div className="flex w-full justify-between items-center">
           <div>
-            <h3 className="text-[24px] font-[700]">Featured Brands</h3>
+            <h3 className="text-[18px] font-[700]">Featured Brands</h3>
           </div>
-          <div>
-            <Button onClick={() => navigate("/allproducts")}>View All</Button>
-          </div>
+          <Link to="/allproducts">
+            <Button>View All</Button>
+          </Link>
         </div>
         <div
-          className={`all-featured-brands flex justify-between items-center ${
-            theme === "dark" && "bg-muted-foreground rounded-md"
-          }`}
+          className={`all-featured-brands flex justify-between items-center ${themeBasedClass}`}
         >
           <div
             className="brand flex justify-center items-center w-[18%] h-[20%] hover:cursor-pointer"
@@ -263,7 +273,7 @@ const AllOfferScreen = () => {
           </div>
         </div>
       </div>
-      <div className="banner flex bg-muted max-w-full max-h-[30vh] rounded-md">
+      <div className="banner flex bg-muted max-w-full max-h-[30vh] lg:max-h-[inherit] rounded-md overflow-hidden">
         <div className="image hidden lg:flex flex-1 rounded-l-md">
           <img
             src={saleTwo}
@@ -271,11 +281,12 @@ const AllOfferScreen = () => {
             className="w-full h-full rounded-l-md"
           />
         </div>
-        <div className="content flex flex-col gap-4 flex-1 p-[3.5rem] items-start text-left">
-          <h2 className="tracking-[0.025rem] font-[700] text-[2.5rem] leading-[2.5rem]">
+
+        <div className="content flex flex-col gap-2 flex-1 p-4 lg:p-[3.5rem] items-start text-left overflow-hidden">
+          <h2 className="tracking-[0.025rem] font-[700] text-[1.5rem] lg:text-[2.5rem] leading-[1.75rem] lg:leading-[2.5rem]">
             Newsletter
           </h2>
-          <p className="font-light text-[12px] text-muted-foreground">
+          <p className="font-light text-[10px] lg:text-[12px] text-muted-foreground">
             Subscribe to our letter, get notified about latest offers!
           </p>
           <div className="flex w-full max-w-sm items-center space-x-2">
@@ -289,6 +300,7 @@ const AllOfferScreen = () => {
             <Button onClick={(e) => handleSubscribe(e)}>Subscribe</Button>
           </div>
         </div>
+
         <div className="image hidden lg:flex flex-1 rounded-r-md">
           <img
             src={saleThree}

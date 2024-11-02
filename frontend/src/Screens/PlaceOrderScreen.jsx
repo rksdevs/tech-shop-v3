@@ -29,6 +29,7 @@ import {
   useDeliverOrderMutation,
   useGetOrderDetailsQuery,
   useInitiateRazorpayPaymentMutation,
+  useManualMarkOrderAsPaidMutation,
   usePayOrderMutation,
   useShipOrderMutation,
   useUpdateOrderWithBillMutation,
@@ -74,6 +75,8 @@ const PlaceOrderScreen = () => {
   const [orderBill, setOrderBill] = useState("");
   const [updateOrderBtn, setUpdateOrderBtn] = useState(false);
   const [selectedBillFile, setSelectedBillFile] = useState(null);
+  const [manualPaymentMethod, setManualPaymentMethod] = useState("");
+  const [manualComments, setManualComments] = useState("");
 
   const [uploadBillFunc, { isLoading: uploadLoading, error: uploadError }] =
     useUploadBillMutation();
@@ -133,6 +136,10 @@ const PlaceOrderScreen = () => {
 
   const [shipOrder, { isLoading: loadingShipping }] = useShipOrderMutation();
   const [cancelOrder] = useCancelOrderByUserMutation();
+  const [
+    manualMarkAsPaid,
+    { isError: manualMarkAsPaidError, isLoading: manualMarkAsPaidLoading },
+  ] = useManualMarkOrderAsPaidMutation();
 
   const handleOrderDeliver = async (e) => {
     e.preventDefault();
@@ -186,6 +193,28 @@ const PlaceOrderScreen = () => {
     }
   };
 
+  const handleManualMarkOrderAsPaid = async (e) => {
+    e.preventDefault();
+    const payload = {
+      orderDetails: orderId,
+      paymentDetails: manualPaymentMethod,
+      comments: manualComments,
+    };
+    try {
+      await manualMarkAsPaid(payload);
+      refetch();
+      toast({
+        title: "Marked order as Paid",
+      });
+    } catch (error) {
+      toast({
+        title: "Something went wrong!",
+        description: error?.data?.message || error?.message,
+        variant: "destructive",
+      });
+    }
+  };
+
   const [
     initiatePayment,
     { isLoading: rzpPaymentLoading, error: rzpPaymentInitiateError },
@@ -220,8 +249,8 @@ const PlaceOrderScreen = () => {
           currency: "INR",
           receipt: "test-receipt",
           notes: {
-            user: userInfo.name,
-            email: userInfo.email,
+            user: userInfo?.data?.name,
+            email: userInfo?.data?.email,
           },
         }).unwrap();
         console.log("payment data", paymentData);
@@ -340,7 +369,7 @@ const PlaceOrderScreen = () => {
                   }`
                 : "Place Order"}
             </h1>
-            {userInfo?.isAdmin && orderData?.orderType && (
+            {userInfo?.data?.isAdmin && orderData?.orderType && (
               <h2 className="text-sm font-medium text-muted-foreground">
                 Order Type: {orderData?.orderType}
               </h2>
@@ -389,7 +418,7 @@ const PlaceOrderScreen = () => {
                       {orderData?.createdAt.substring(0, 10)}
                     </time>
                   </div>
-                  {userInfo.isAdmin && (
+                  {userInfo?.data?.isAdmin && (
                     <Button
                       size="sm"
                       onClick={() =>
@@ -405,7 +434,9 @@ const PlaceOrderScreen = () => {
               <Card
                 x-chunk="dashboard-01-chunk-1"
                 className={`relative flex flex-col ${
-                  userInfo?.isAdmin ? "justify-between" : "justify-between"
+                  userInfo?.data?.isAdmin
+                    ? "justify-between"
+                    : "justify-between"
                 }`}
               >
                 <CardHeader className="flex rounded-t-lg flex-row items-center justify-between space-y-0 pb-4 bg-muted/50">
@@ -422,7 +453,7 @@ const PlaceOrderScreen = () => {
                       </span>{" "}
                       <span className="pl-2">
                         {orderData?.isPaid ? "Paid" : "Pending"}
-                        {userInfo?.isAdmin && orderData?.isPaid && (
+                        {userInfo?.data?.isAdmin && orderData?.isPaid && (
                           <span className="ml-4 font-semibold text-primary">
                             Rzp: {orderData?.paymentDetails.paymentId}
                           </span>
@@ -470,9 +501,9 @@ const PlaceOrderScreen = () => {
                     </div>
                   </div>
                 </CardContent>
-                {userInfo && userInfo?.isAdmin ? (
-                  <CardFooter className="flex rounded-b-lg w-full flex-row justify-center items-center border-t bg-muted/50 px-6 py-3">
-                    <div className="text-xs text-muted-foreground w-full flex flex-col md:flex-row gap-2 md:gap-8 justify-center md:justify-between">
+                {userInfo && userInfo?.data?.isAdmin ? (
+                  <CardFooter className="flex rounded-b-lg w-full flex-row justify-center items-center border-t bg-muted/50 px-2 py-3">
+                    <div className="text-xs text-muted-foreground w-full flex flex-col md:flex-row gap-2 justify-center md:justify-between">
                       {!orderData?.isShipped && (
                         <Dialog>
                           <DialogTrigger asChild>
@@ -568,9 +599,74 @@ const PlaceOrderScreen = () => {
                           </DialogContent>
                         </Dialog>
                       )}
+                      {!orderData?.isPaid && (
+                        <Dialog>
+                          <DialogTrigger asChild>
+                            <Button
+                              variant="outline"
+                              disabled={orderData?.isCancelled}
+                            >
+                              Mark as Paid
+                            </Button>
+                          </DialogTrigger>
+                          <DialogContent className="w-[380px] sm:max-w-[400px]">
+                            <DialogHeader>
+                              <DialogTitle>Payment</DialogTitle>
+                              <DialogDescription>
+                                Update order to paid
+                              </DialogDescription>
+                            </DialogHeader>
+                            <div className="grid gap-4 py-4">
+                              <div className="grid grid-cols-4 items-center gap-4">
+                                <Label
+                                  htmlFor="paymentMehthod"
+                                  className="text-right"
+                                >
+                                  Payment Method
+                                </Label>
+                                <Input
+                                  id="paymentMehthod"
+                                  value={manualPaymentMethod}
+                                  className="col-span-3"
+                                  onChange={(e) =>
+                                    setManualPaymentMethod(e.target.value)
+                                  }
+                                  placeholder="Enter payment method"
+                                />
+                              </div>
+                              <div className="grid grid-cols-4 items-center gap-4">
+                                <Label
+                                  htmlFor="comments"
+                                  className="text-right"
+                                >
+                                  Comments
+                                </Label>
+                                <Input
+                                  id="comments"
+                                  value={manualComments}
+                                  className="col-span-3"
+                                  onChange={(e) =>
+                                    setManualComments(e.target.value)
+                                  }
+                                  placeholder="Comments or notes..."
+                                />
+                              </div>
+                            </div>
+                            <DialogFooter>
+                              <Button
+                                type="submit"
+                                onClick={(e) => handleManualMarkOrderAsPaid(e)}
+                              >
+                                Mark as Paid
+                              </Button>
+                            </DialogFooter>
+                          </DialogContent>
+                        </Dialog>
+                      )}
                       {orderData?.isDelivered && orderData?.isShipped && (
                         <p>Shipment Status</p>
                       )}
+                      {}
                     </div>
                   </CardFooter>
                 ) : (
@@ -681,7 +777,7 @@ const PlaceOrderScreen = () => {
                       Bill Not Available
                     </Button>
                   )}
-                  {userInfo?.isAdmin && (
+                  {userInfo?.data?.isAdmin && (
                     <>
                       <div className="flex gap-2">
                         <Input
@@ -712,7 +808,7 @@ const PlaceOrderScreen = () => {
                       Cancel Order
                     </Button>
                   )}
-                  {userInfo?.isAdmin && (
+                  {userInfo?.data?.isAdmin && (
                     <Button
                       onClick={(e) => handleOrderCancellation(e)}
                       disabled={orderData?.isCancelled}

@@ -1,5 +1,5 @@
 import express from "express";
-import { deleteSubscriber, getAllSubscribers, sendNewProductToAllSubscribers, sendOffersToAllSubscribers, subscribeToNewsletter } from "../controller/newsLetterController.js";
+import { deleteSubscriber, getAllSubscribers, sendChatToAdmin, sendNewProductToAllSubscribers, sendOffersToAllSubscribers, subscribeToNewsletter } from "../controller/newsLetterController.js";
 import { admin, protect } from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
@@ -16,5 +16,7 @@ router.get('/subscribers',protect, admin, getAllSubscribers);
 router.post('/send-offers',protect, admin, sendOffersToAllSubscribers);
 
 router.post('/send-newProduct-offer',protect, admin, sendNewProductToAllSubscribers);
+
+router.post('/share-chat',protect, sendChatToAdmin);
 
 export default router;

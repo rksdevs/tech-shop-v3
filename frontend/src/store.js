@@ -8,6 +8,7 @@ import productFilterSlice from "../src/Features/filterSlice";
 import pcConfigureSlice from "../src/Features/pcConfigureSlice";
 import orderTypeSlice from "./Features/orderTypeSlice";
 import selectedPrebuiltPcSlice from "./Features/selectedPrebuiltPcSlice";
+import messageSlice from "./Features/messageSlice";
 
 const store = configureStore({
     reducer: {
@@ -20,6 +21,7 @@ const store = configureStore({
         PcConfigure: pcConfigureSlice,
         orderType: orderTypeSlice,
         selectedPrebuiltPc: selectedPrebuiltPcSlice,
+        messages: messageSlice,
     },
     middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(apiSlice.middleware),
     devTools: true,

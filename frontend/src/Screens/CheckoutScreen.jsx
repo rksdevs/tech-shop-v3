@@ -25,6 +25,13 @@ import { clearCart, saveShippingAddress } from "../Features/cartSlice";
 import { Separator } from "../components/ui/separator";
 import { useCreateOrderMutation } from "../Features/orderApiSlice";
 import { useToast } from "../components/ui/use-toast";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../components/ui/select";
 
 const CheckoutScreen = () => {
   const { userInfo } = useSelector((state) => state.auth);
@@ -48,8 +55,73 @@ const CheckoutScreen = () => {
   const [createOrder, { isLoading: orderLoading, error: orderError }] =
     useCreateOrderMutation();
 
+  // Validate state (must be a valid state from the array)
+  const indianStates = [
+    "Andhra Pradesh",
+    "Arunachal Pradesh",
+    "Assam",
+    "Bihar",
+    "Chhattisgarh",
+    "Goa",
+    "Gujarat",
+    "Haryana",
+    "Himachal Pradesh",
+    "Jharkhand",
+    "Karnataka",
+    "Kerala",
+    "Madhya Pradesh",
+    "Maharashtra",
+    "Manipur",
+    "Meghalaya",
+    "Mizoram",
+    "Nagaland",
+    "Odisha",
+    "Punjab",
+    "Rajasthan",
+    "Sikkim",
+    "Tamil Nadu",
+    "Telangana",
+    "Tripura",
+    "Uttar Pradesh",
+    "Uttarakhand",
+    "West Bengal",
+    "Delhi",
+    "Jammu and Kashmir",
+    "Ladakh",
+  ];
+
   const handleShippingAddress = (e) => {
     e.preventDefault();
+
+    // Validate postal code (must be 6 digits)
+    if (postalCode.length !== 6 || isNaN(postalCode)) {
+      toast({
+        title: "Postal code must be exactly 6 digit number",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Set country to 'India' automatically
+    setCountry("India");
+
+    // Validate phone number (must be 10 digits)
+    if (phone.length !== 10 || isNaN(phone)) {
+      toast({
+        title: "Phone number must be exactly 10 digits",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!indianStates.includes(state)) {
+      toast({
+        title: "Please select a valid state from India",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setActiveTab("placeOrder");
     dispatch(
       saveShippingAddress({ address, city, postalCode, country, phone, state })
@@ -137,13 +209,25 @@ const CheckoutScreen = () => {
                   </div>
                   <div className="grid gap-2">
                     <Label htmlFor="state">State</Label>
-                    <Input
+                    {/* <Input
                       id="state"
                       placeholder="Enter your State"
                       required
                       value={state}
                       onChange={(e) => setState(e.target.value)}
-                    />
+                    /> */}
+                    <Select value={state} onValueChange={(e) => setState(e)}>
+                      <SelectTrigger id="category" aria-label="Select category">
+                        <SelectValue placeholder="Select State" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {indianStates?.map((state, index) => (
+                          <SelectItem key={index} value={state}>
+                            {state}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </div>
                   <div className="grid gap-2">
                     <Label htmlFor="postal">Postal Code</Label>

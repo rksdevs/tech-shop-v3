@@ -111,6 +111,7 @@ import { addConfigureCpu } from "../Features/pcConfigureSlice";
 import CustomPcComponentCard from "../components/CustomPcComponentCard";
 import CustomPcSelectionTableCard from "../components/CustomPcSelectionTableCard";
 import placeholderimg from "../components/assets/images/place-hold-2.jpg";
+import { Playground } from "../components/Playground";
 
 const BuildCustomPCScreen = () => {
   const cart = useSelector((state) => state.cart);
@@ -421,7 +422,7 @@ const BuildCustomPCScreen = () => {
       let date = new Date(
         userData?.gptLastRequest ? userData?.gptLastRequest : Date.now()
       );
-      console.log(date);
+      // console.log(date);
       // Add 30 days to the date
       date.setDate(date.getDate() + 30);
 
@@ -446,7 +447,7 @@ const BuildCustomPCScreen = () => {
             <h1 className="text-[28px] font-extrabold">
               Build Your Custom PC With Our AI -{" "}
               <span className="italic font-bold tracking-[0.075rem] text-primary">
-                Merlin
+                HALO
               </span>
             </h1>
           </div>
@@ -482,7 +483,7 @@ const BuildCustomPCScreen = () => {
                         orientation="vertical"
                         className="w-full"
                       >
-                        <CarouselContent className="-mt-1 h-[450px] md:h-[550px]">
+                        <CarouselContent className="-mt-1 h-[450px] md:h-[550px] overflow-y-auto scrollbar">
                           <CarouselItem className="pt-1 basis-1 md:basis-1/2">
                             <div className="p-1">
                               {cpu?.name ? (
@@ -1263,13 +1264,13 @@ const BuildCustomPCScreen = () => {
                               </DialogHeader>
                               <fieldset className="flex flex-col gap-4 rounded-lg border p-4 col-span-3">
                                 <legend className="-ml-1 px-1 text-sm font-medium">
-                                  Merlin
+                                  HALO
                                 </legend>
                                 <Card className="h-[410px]">
                                   {" "}
                                   {/* Set a fixed height for the Card */}
                                   <CardHeader className="rounded-t-xl bg-muted/50">
-                                    <CardTitle>Merlin's Prediction</CardTitle>
+                                    <CardTitle>HALO's Prediction</CardTitle>
                                   </CardHeader>
                                   <CardContent className="pt-4 text-sm overflow-y-auto max-h-[75%] scrollbar">
                                     {" "}
@@ -1428,7 +1429,7 @@ const BuildCustomPCScreen = () => {
                                 className="mt-2"
                                 onClick={(e) => handleMerlinQuery(e)}
                               >
-                                Ask Merlin
+                                Ask HALO
                               </Button>
                             ) : (
                               <Button
@@ -1444,13 +1445,13 @@ const BuildCustomPCScreen = () => {
                     </fieldset>
                     <fieldset className="flex flex-col gap-4 rounded-lg border p-4">
                       <legend className="-ml-1 px-1 text-sm font-medium">
-                        Merlin
+                        HALO
                       </legend>
                       <Card className="h-[370px]">
                         {" "}
                         {/* Set a fixed height for the Card */}
                         <CardHeader className="rounded-t-xl bg-muted/50">
-                          <CardTitle>Merlin's Prediction</CardTitle>
+                          <CardTitle>HALO's Prediction</CardTitle>
                         </CardHeader>
                         <CardContent className="pt-4 text-sm overflow-y-auto">
                           {" "}
@@ -1484,404 +1485,11 @@ const BuildCustomPCScreen = () => {
               </Card>
             </TabsContent>
             <TabsContent value="suggestPC" className="flex flex-col gap-4">
-              <Card>
-                <CardHeader className="bg-muted/50 rounded-t-xl">
-                  <CardTitle>Select Your Preferences</CardTitle>
-                </CardHeader>
-                <CardContent className="p-4 pb-2 pt-2 text-sm ">
-                  <div className="text-sm grid md:grid-cols-5 gap-4">
-                    <div className="grid gap-3 col-span-2 p-4">
-                      <form className="flex flex-col gap-4">
-                        <div className="flex flex-col md:flex-row items-center gap-3">
-                          <Label
-                            htmlFor="resolution"
-                            className="w-full md:w-2/5 text-center md:text-left"
-                          >
-                            Resolution
-                          </Label>
-                          <Select
-                            className="w-full md:w-3/5"
-                            onValueChange={(e) =>
-                              setDisplaySettingsPrediction(`${e} pixels`)
-                            }
-                          >
-                            <SelectTrigger>
-                              <SelectValue
-                                placeholder="Select resolution"
-                                value={displaySettingsPrediction}
-                              />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="1080">
-                                1080 Pixels - 1K Resolution
-                              </SelectItem>
-                              <SelectItem value="1440">
-                                1440 Pixels - 2K Resolution
-                              </SelectItem>
-                              <SelectItem value="2160">
-                                2160 Pixels - 4K Resolution
-                              </SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-                        <div className="flex flex-col md:flex-row items-center gap-3">
-                          <Label
-                            htmlFor="settings"
-                            className="w-full md:w-2/5 text-center md:text-left"
-                          >
-                            Display
-                          </Label>
-                          <Select
-                            className="w-full md:w-3/5"
-                            onValueChange={(e) => setGameSettingsPrediction(e)}
-                          >
-                            <SelectTrigger>
-                              <SelectValue
-                                placeholder="Game display settings"
-                                value={gameSettingsPrediction}
-                              />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="ultra">
-                                Ultra High Settings
-                              </SelectItem>
-                              <SelectItem value="high">
-                                High Settings
-                              </SelectItem>
-                              <SelectItem value="medium">
-                                Medium Settings
-                              </SelectItem>
-                              <SelectItem value="low">Low Settings</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-                        <div className="flex flex-col md:flex-row items-center gap-3">
-                          <Label
-                            htmlFor="games"
-                            className="w-full md:w-1/5 text-center md:text-left"
-                          >
-                            Games or Software
-                          </Label>
-                          <Input
-                            id="games"
-                            placeholder="Enter games or softwares..."
-                            className="w-full md:w-[72%] ml-0 md:ml-6"
-                            value={gamesPrediction}
-                            onChange={(e) => setGamesPrediction(e.target.value)}
-                          />
-                        </div>
-                        <div className="flex flex-col md:flex-row items-center gap-3">
-                          <Label
-                            htmlFor="budget"
-                            className="w-full md:w-2/5 text-center md:text-left"
-                          >
-                            Budget (₹)
-                          </Label>
-                          <Input
-                            id="budget"
-                            type="number"
-                            placeholder="Enter budget in rupees"
-                            className="w-full"
-                            value={budgetPrediction}
-                            onChange={(e) =>
-                              setBudgetPrediction(e.target.value)
-                            }
-                          />
-                        </div>
-                        {userInfo ? (
-                          <Button
-                            className="mt-2"
-                            onClick={(e) => handleMerlinPredictionQuery(e)}
-                          >
-                            Ask Merlin
-                          </Button>
-                        ) : (
-                          <Button
-                            className="mt-2"
-                            onClick={() => navigate("/login")}
-                          >
-                            Login To Access AI
-                          </Button>
-                        )}
-                      </form>
-                      <Card className="my-4 flex">
-                        <CardHeader>
-                          <CardTitle className="text-lg">
-                            Limited Responses
-                          </CardTitle>
-                          <CardDescription className="hidden md:flex text-left pl-2">
-                            Reset frequency: 30 days Reset Date :{" "}
-                            {merlinResetDate}
-                          </CardDescription>
-                        </CardHeader>
-                        <CardContent className="bg-muted flex flex-col gap-4 justify-center items-center pt-2 rounded-r-lg">
-                          <h3 className="font-medium">Remaining Limits</h3>
-                          <span
-                            className={`py-1 ml-2 px-4 text-white rounded-lg ${
-                              remainingGptRequestCount < 5
-                                ? "bg-destructive"
-                                : "bg-primary"
-                            }`}
-                          >
-                            {remainingGptRequestCount}
-                          </span>
-                        </CardContent>
-                      </Card>
-                    </div>
-                    <fieldset className="flex flex-col gap-4 rounded-lg border p-4 col-span-3">
-                      <legend className="-ml-1 px-1 text-sm font-medium">
-                        Merlin
-                      </legend>
-                      <Card className="h-[410px]">
-                        {" "}
-                        {/* Set a fixed height for the Card */}
-                        <CardHeader className="rounded-t-xl bg-muted/50">
-                          <CardTitle>Merlin's Choice</CardTitle>
-                        </CardHeader>
-                        <CardContent className="pt-4 text-sm overflow-y-auto max-h-[75%] scrollbar">
-                          {" "}
-                          {/* Make content scrollable */}
-                          <div className="grid gap-3">
-                            {!prebuiltPcSuggestion?.length ? (
-                              <div className="flex flex-col space-y-3">
-                                <Skeleton className="h-[130px] md:h-[160px] w-[65vw] md:w-[480px] rounded-xl" />
-                                {/* <Skeleton className="h-[170px] w-[380px] rounded-xl" /> */}
-
-                                <div className="space-y-2">
-                                  <Skeleton className="h-3 w-[65vw] md:w-[480px]" />
-                                  <Skeleton className="h-3 w-[65vw] md:w-[480px]" />
-                                  <Skeleton className="h-3 w-[65vw] md:w-[480px]" />
-                                  <Skeleton className="h-3 w-[60vw] md:w-[400px]" />
-                                </div>
-                              </div>
-                            ) : (
-                              <div className="flex flex-col justify-between gap-4">
-                                {prebuiltPcSuggestion?.map((item, index) => (
-                                  <p key={index} className="text-left">
-                                    {item}
-                                  </p>
-                                ))}
-                                <Button
-                                  className={`w-full flex gap-4 mt-2 ${
-                                    suggestedPcName === "NA" ? "hidden" : ""
-                                  }`}
-                                  onClick={(e) => displaySelectedPc(e)}
-                                  disabled={suggestedPcName === "NA"}
-                                >
-                                  Check Out {suggestedPcName}
-                                </Button>
-                              </div>
-                            )}
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </fieldset>
-                  </div>
-                </CardContent>
-              </Card>
-              {prebuiltPc?.pcName && (
-                <Card className={`${!prebuiltPc?.pcName ? "hidden" : ""}`}>
-                  <CardHeader className="rounded-t-xl bg-muted/50">
-                    <CardTitle>Suggested Configuration</CardTitle>
-                  </CardHeader>
-                  <CardContent className="flex justify-center items-center">
-                    <Card className="h-fit w-[450px] mt-4">
-                      <CardHeader className="rounded-t-xl items-center border-b p-4">
-                        <img
-                          src={customPcImg}
-                          alt="custom pc"
-                          className="w-[250px] h-[250px]"
-                        />
-                        <CardTitle>{prebuiltPc?.pcName}</CardTitle>
-                      </CardHeader>
-                      <CardContent className="pt-6">
-                        <div>
-                          <div className="flex gap-4 items-start pb-4 last:mb-0 last:pb-0">
-                            <Cpu />
-                            <div className="space-y-1 text-left">
-                              <p className="text-sm font-medium leading-none">
-                                Platform
-                              </p>
-                              <p className="text-sm text-muted-foreground">
-                                Based on {prebuiltPc?.platform} Platform
-                              </p>
-                            </div>
-                          </div>
-                          <div className="flex gap-4 items-start pb-4 last:mb-0 last:pb-0">
-                            <GalleryThumbnails />
-                            <div className="space-y-1 text-left">
-                              <p className="text-sm font-medium leading-none">
-                                Category
-                              </p>
-                              <p className="text-sm text-muted-foreground">
-                                {prebuiltPc?.pcCategory}
-                              </p>
-                            </div>
-                          </div>
-                          <div className="flex gap-4 items-start pb-4 last:mb-0 last:pb-0">
-                            <Gamepad2 />
-                            <div className="space-y-1 text-left">
-                              <p className="text-sm font-medium leading-none">
-                                Recommended Uses
-                              </p>
-                              <p className="text-sm text-muted-foreground">
-                                {prebuiltPc?.pcUses}
-                              </p>
-                            </div>
-                          </div>
-                          <div className="flex gap-4 items-start pb-4 last:mb-0 last:pb-0">
-                            <IndianRupee />
-                            <div className="space-y-1 text-left">
-                              <p className="text-sm font-medium leading-none">
-                                Budget
-                              </p>
-                              <p className="text-sm text-muted-foreground">
-                                Between ₹ {prebuiltPc?.pcTotalPrice}
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                        <Popover>
-                          <PopoverTrigger asChild>
-                            <Button className="flex gap-2 mt-4 w-full">
-                              <span>Preview</span>
-                              <Eye />
-                            </Button>
-                          </PopoverTrigger>
-                          <PopoverContent className="w-[300] md:w-[450px]">
-                            <Card className="overflow-hidden w-full">
-                              <CardHeader className="rounded-t-xl flex flex-row items-start bg-muted/50 p-5">
-                                <div className="grid gap-0.5">
-                                  <CardTitle className="group flex items-center gap-2 text-lg">
-                                    Specifications
-                                  </CardTitle>
-                                </div>
-                              </CardHeader>
-                              <CardContent className="p-6 text-sm">
-                                <div className="grid gap-3">
-                                  <ul className="grid gap-3">
-                                    <li className="flex items-center justify-between border p-1 rounded">
-                                      <span className="text-muted-foreground">
-                                        Processor
-                                      </span>
-                                      <span>
-                                        {prebuiltPc?.pcComponents?.cpu?.name
-                                          ?.split(" ")
-                                          .slice(0, 5)
-                                          .join(" ") || "NA"}
-                                      </span>
-                                    </li>
-                                    <li className="flex items-center justify-between border p-1 rounded">
-                                      <span className="text-muted-foreground">
-                                        Motherboard
-                                      </span>
-                                      <span>
-                                        {prebuiltPc?.pcComponents?.motherboard?.name
-                                          ?.split(" ")
-                                          .slice(0, 5)
-                                          .join(" ") || "NA"}
-                                      </span>
-                                    </li>
-                                    <li className="flex items-center justify-between border p-1 rounded">
-                                      <span className="text-muted-foreground">
-                                        Graphics
-                                      </span>
-                                      <span>
-                                        {prebuiltPc?.pcComponents?.gpu?.name
-                                          ?.split(" ")
-                                          .slice(0, 5)
-                                          .join(" ") || "NA"}
-                                      </span>
-                                    </li>
-                                    <li className="flex items-center justify-between border p-1 rounded">
-                                      <span className="text-muted-foreground">
-                                        RAM
-                                      </span>
-                                      <span>
-                                        {prebuiltPc?.pcComponents?.ram?.name
-                                          ?.split(" ")
-                                          .slice(0, 5)
-                                          .join(" ") || "NA"}
-                                      </span>
-                                    </li>
-                                    <li className="flex items-center justify-between border p-1 rounded">
-                                      <span className="text-muted-foreground">
-                                        Memory SSD
-                                      </span>
-                                      <span>
-                                        {prebuiltPc?.pcComponents?.ssd?.name
-                                          ?.split(" ")
-                                          .slice(0, 5)
-                                          .join(" ") || "NA"}
-                                      </span>
-                                    </li>
-                                    <li className="flex items-center justify-between border p-1 rounded">
-                                      <span className="text-muted-foreground">
-                                        Memory HDD
-                                      </span>
-                                      <span>
-                                        {prebuiltPc?.pcComponents?.hdd?.name
-                                          ?.split(" ")
-                                          .slice(0, 5)
-                                          .join(" ") || "NA"}
-                                      </span>
-                                    </li>
-                                    <li className="flex items-center justify-between border p-1 rounded">
-                                      <span className="text-muted-foreground">
-                                        Cooler
-                                      </span>
-                                      <span>
-                                        {prebuiltPc?.pcComponents?.coolingSystem?.name
-                                          ?.split(" ")
-                                          .slice(0, 5)
-                                          .join(" ") || "NA"}
-                                      </span>
-                                    </li>
-                                    <li className="flex items-center justify-between border p-1 rounded">
-                                      <span className="text-muted-foreground">
-                                        Power Supply
-                                      </span>
-                                      <span>
-                                        {prebuiltPc?.pcComponents?.psu?.name
-                                          ?.split(" ")
-                                          .slice(0, 5)
-                                          .join(" ") || "NA"}
-                                      </span>
-                                    </li>
-                                    <li className="flex items-center justify-between border p-1 rounded">
-                                      <span className="text-muted-foreground">
-                                        Cabinet
-                                      </span>
-                                      <span>
-                                        {prebuiltPc?.pcComponents?.cabinet?.name
-                                          ?.split(" ")
-                                          .slice(0, 5)
-                                          .join(" ") || "NA"}
-                                      </span>
-                                    </li>
-                                  </ul>
-                                </div>
-                              </CardContent>
-                              <CardFooter className="flex justify-between items-center border-t bg-muted/50 px-6 py-3">
-                                <span className="text-xl font-bold text-primary">
-                                  ₹ {prebuiltPc?.pcTotalPrice || "NA"}
-                                </span>
-                                <Button
-                                  onClick={(e) =>
-                                    handleAddAllToCart(e, "prebuiltPC")
-                                  }
-                                >
-                                  Add To Cart
-                                </Button>
-                              </CardFooter>
-                            </Card>
-                          </PopoverContent>
-                        </Popover>
-                      </CardContent>
-                    </Card>
-                  </CardContent>
-                </Card>
-              )}
+              <Playground
+                remainingGptRequestCount={remainingGptRequestCount}
+                merlinResetDate={merlinResetDate}
+                setRemainingGptRequestCount={setRemainingGptRequestCount}
+              />
             </TabsContent>
           </Tabs>
         </div>

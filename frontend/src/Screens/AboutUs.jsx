@@ -47,7 +47,7 @@ const AboutUs = () => {
           <div className="section-heading flex justify-center">
             <h1 className="text-[28px] font-extrabold">About Us</h1>
           </div>
-          <div className="grid gap-4 md:grid-cols-3">
+          <div className="grid gap-4 md:grid-cols-2">
             <Card className="h-fit">
               <CardHeader className="items-center">
                 <Avatar className="h-[150px] w-[150px] mb-4">
@@ -57,7 +57,7 @@ const AboutUs = () => {
                   />
                   <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
-                <CardTitle>Master Cane</CardTitle>
+                <CardTitle>Neal Raj</CardTitle>
                 <CardDescription>Owner</CardDescription>
               </CardHeader>
             </Card>
@@ -70,11 +70,11 @@ const AboutUs = () => {
                   />
                   <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
-                <CardTitle>Master Tony</CardTitle>
+                <CardTitle>Karan Raj</CardTitle>
                 <CardDescription>Co-Owner</CardDescription>
               </CardHeader>
             </Card>
-            <Card className="h-fit">
+            {/* <Card className="h-fit">
               <CardHeader className="items-center">
                 <Avatar className="h-[150px] w-[150px] mb-4">
                   <AvatarImage
@@ -86,7 +86,7 @@ const AboutUs = () => {
                 <CardTitle>Jarvis</CardTitle>
                 <CardDescription>Product Expert</CardDescription>
               </CardHeader>
-            </Card>
+            </Card> */}
           </div>
           <fieldset className="flex flex-col gap-8 rounded-lg border p-4">
             <legend className="-ml-1 px-1 text-sm font-medium">
@@ -207,13 +207,13 @@ const AboutUs = () => {
                         // src={instaProfileDetails?.profilePic}
                         src={instaPic}
                         crossOrigin="anonymous"
-                        alt="tech-shop"
+                        alt="computermakers"
                         className="rounded-[50%]"
                       />
                       <AvatarFallback>CN</AvatarFallback>
                     </Avatar>
                     <div className="flex flex-col gap-4">
-                      <CardTitle>{`@bluemoon_rakesh`}</CardTitle>
+                      <CardTitle>{`@computermakers`}</CardTitle>
                       <div className="flex gap-4">
                         <CardDescription className="flex flex-col">
                           <span className="text-sm font-bold text-black">

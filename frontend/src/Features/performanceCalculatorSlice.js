@@ -43,7 +43,14 @@ const performanceCalculatorSlice = apiSlice.injectEndpoints({
                 body: data,
             }),            
         }),
+        getGuidance: builder.mutation({
+            query: (data) => ({
+                url: `${PERFORMANCE_CAL_URL}/getGuidance`,
+                method: 'POST',
+                body: data,
+            }),            
+        }),
     })
 })
 
-export const {useCalculatePerformanceMutation, useGetYoutubeVideosQuery, useGetInstaProfileDetailsQuery, useGetInstaTopPostsQuery, useGetSuitablePrebuiltPcMutation, useGetCompatibilityMutation} = performanceCalculatorSlice
+export const {useCalculatePerformanceMutation, useGetYoutubeVideosQuery, useGetInstaProfileDetailsQuery, useGetInstaTopPostsQuery, useGetSuitablePrebuiltPcMutation, useGetCompatibilityMutation, useGetGuidanceMutation} = performanceCalculatorSlice

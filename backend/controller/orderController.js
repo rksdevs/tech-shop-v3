@@ -145,6 +145,49 @@ const updateOrderToPaid = asyncHandler(async(req,res)=>{
     }
 })
 
+//@desc Update order to paid by Admin
+//@route PUT /api/orders/:id/admin-manual-pay
+//@access Private
+const updateOrderToPaidManually = asyncHandler(async(req,res)=>{
+    
+    const { orderDetails, paymentDetails, comments } = req.body;
+
+    const orderId = `manually-updated-${orderDetails}`;
+    const paymentId = `manually-updated-${paymentDetails}`;
+    const signature = `manually-updated-${comments}`;
+
+    try {
+        const order = await Order.findById(req.params.id)
+            if (order) {
+                if(order?.isCancelled) {
+                    res.status(400).json({ error: 'Order is already cancelled' });
+                    return; 
+                }
+                order.isPaid = true;
+                order.paidAt = Date.now();
+                order.paymentMethod = paymentDetails;
+                // Save Razorpay payment details if necessary
+                order.paymentDetails = {
+                    orderId,
+                    paymentId,
+                    signature
+                };
+        
+                const updatedOrder = await order.save();
+                sendPaymentConfirmationEmail(req.user.email, order?._id, req.user.name);
+                res.status(200).json(updatedOrder)
+            } else {
+                res.status(404);
+                throw new Error('Order not found')
+            }
+
+    } catch (error) {
+        console.error('Error verifying signature:', error);
+        res.status(500);
+        throw new Error('Internal server error');
+    }
+})
+
 //@desc Update order to delivered
 //@route PUT /api/orders/:id/deliver
 //@access Private/admin
@@ -254,7 +297,7 @@ function sendOrderPlacedEmail(email, orderId, name) {
         from: process.env.GOOGLE_USER_EMAIL,
         to: email,
         subject: `Order Update for Order No: ${orderId}`,
-        text: `Hi ${name}, your order has been placed. Please proceed with making the payment, if you haven't already paid for it. If the payment is completed, please ignore this email. Visit our website to track your order details - www.rksdevs.in. This email address is not monitored, please do not reply you will not receive any response.`
+        text: `Hi ${name}, your order has been placed. Please proceed with making the payment, if you haven't already paid for it. If the payment is completed, please ignore this email. Visit our website to track your order details - www.computermakers.in. This email address is not monitored, please do not reply you will not receive any response.`
     };
 
     transporter.sendMail(mailOptions, (error, info) => {
@@ -270,7 +313,7 @@ function sendPaymentConfirmationEmail(email, orderId, name) {
         from: process.env.GOOGLE_USER_EMAIL,
         to: email,
         subject: `Order Update for Order No: ${orderId}`,
-        text: `Hi ${name}, your payment for the above order number has been received. Thank you for shopping with us. Visit our website to track your order details - www.rksdevs.in. This email address is not monitored, please do not reply you will not receive any response.`
+        text: `Hi ${name}, your payment for the above order number has been received. Thank you for shopping with us. Visit our website to track your order details - www.computermakers.in. This email address is not monitored, please do not reply you will not receive any response.`
     };
 
     transporter.sendMail(mailOptions, (error, info) => {
@@ -286,7 +329,7 @@ function sendShippingConfirmationEmail(email, orderId, name) {
         from: process.env.GOOGLE_USER_EMAIL,
         to: email,
         subject: `Order Update for Order No: ${orderId}`,
-        text: `Hi ${name}, your order has been shipped. Visit our website to track your order details - www.rksdevs.in. This email address is not monitored, please do not reply you will not receive any response.`
+        text: `Hi ${name}, your order has been shipped. Visit our website to track your order details - www.computermakers.in. This email address is not monitored, please do not reply you will not receive any response.`
     };
 
     transporter.sendMail(mailOptions, (error, info) => {
@@ -302,7 +345,7 @@ function sendCancellationConfirmationEmail(email, orderId, name) {
         from: process.env.GOOGLE_USER_EMAIL,
         to: email,
         subject: `Order Update for Order No: ${orderId}`,
-        text: `Hi ${name}, your order has been cancelled. Visit our website to check your order details - www.rksdevs.in. This email address is not monitored, please do not reply you will not receive any response.`
+        text: `Hi ${name}, your order has been cancelled. Visit our website to check your order details - www.computermakers.in. This email address is not monitored, please do not reply you will not receive any response.`
     };
 
     transporter.sendMail(mailOptions, (error, info) => {
@@ -318,7 +361,7 @@ function sendDeliveryConfirmationEmail(email, orderId, name) {
         from: process.env.GOOGLE_USER_EMAIL,
         to: email,
         subject: `Order Update for Order No: ${orderId}`,
-        text: `Hi ${name}, your order has been delivered. Visit our website to track your order details - www.rksdevs.in. This email address is not monitored, please do not reply you will not receive any response.`
+        text: `Hi ${name}, your order has been delivered. Visit our website to track your order details - www.computermakers.in. This email address is not monitored, please do not reply you will not receive any response.`
     };
 
     transporter.sendMail(mailOptions, (error, info) => {
@@ -334,7 +377,7 @@ function sendBillUpdateEmail(email, orderId, name) {
         from: process.env.GOOGLE_USER_EMAIL,
         to: email,
         subject: `Order Update for Order No: ${orderId}`,
-        text: `Hi ${name}, we've added the bill for this order. Visit our website to download your bill - www.rksdevs.in. This email address is not monitored, please do not reply you will not receive any response.`
+        text: `Hi ${name}, we've added the bill for this order. Visit our website to download your bill - www.computermakers.in. This email address is not monitored, please do not reply you will not receive any response.`
     };
 
     transporter.sendMail(mailOptions, (error, info) => {
@@ -378,4 +421,4 @@ const updateOrderToCancelled = asyncHandler(async(req,res)=>{
 
 
 
-export {addOrderItems, getMyOrders, getOrderById, updateOrderToPaid, updateOrderToDelivered, getAllOrders, updateOrderToShipped, addBillToOrder, uploadBill, updateOrderwithBill, updateOrderToCancelled}
+export {addOrderItems, getMyOrders, getOrderById, updateOrderToPaid, updateOrderToDelivered, getAllOrders, updateOrderToShipped, addBillToOrder, uploadBill, updateOrderwithBill, updateOrderToCancelled, updateOrderToPaidManually}

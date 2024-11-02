@@ -104,6 +104,7 @@ function EditProduct() {
   const [category, setCategory] = useState(product?.category || "");
   const [brand, setBrand] = useState(product?.brand || "");
   const [price, setPrice] = useState(product?.price || 0);
+  const [currentPrice, setCurrentPrice] = useState(product?.currentPrice || 0);
   const [countInStock, setCountInStock] = useState(product?.countInStock || 0);
   const [productDiscount, setProductDiscount] = useState(
     product?.productDiscount || 0
@@ -367,6 +368,7 @@ function EditProduct() {
         category,
         brand,
         price,
+        currentPrice,
         countInStock,
         productDiscount,
         socketType,
@@ -440,6 +442,7 @@ function EditProduct() {
       setCategory(product?.category);
       setBrand(product?.brand);
       setPrice(product?.price);
+      setCurrentPrice(product?.currentPrice);
       setCountInStock(product?.countInStock);
       setProductDiscount(product?.productDiscount);
       // setIsOnOffer(product?.isOnOffer);
@@ -612,6 +615,28 @@ function EditProduct() {
     }
   };
 
+  const handleCurrentPriceChange = (value) => {
+    // e.preventDefault();
+    // if (typeof value !== "number") {
+    //   console.log("Needs to be a number");
+    //   return;
+    // }
+
+    setCurrentPrice(value);
+    setProductDiscount(((price - value) / price) * 100);
+  };
+
+  const handleProductDiscountChange = (value) => {
+    // e.preventDefault();
+    // if (typeof value !== "number") {
+    //   console.log("Needs to be a number");
+    //   return;
+    // }
+
+    setProductDiscount(value);
+    setCurrentPrice(price - (price * value) / 100);
+  };
+
   return (
     <div className="flex w-full gap-6">
       <Container className="flex flex-col gap-8 p-4">
@@ -709,6 +734,7 @@ function EditProduct() {
                             <TableHead className="pl-3">SKU</TableHead>
                             <TableHead className="pl-3">Stock</TableHead>
                             <TableHead className="pl-3">Price (₹)</TableHead>
+                            <TableHead className="pl-3">MRP (₹)</TableHead>
                             <TableHead className="pl-3">Discount (%)</TableHead>
                           </TableRow>
                         </TableHeader>
@@ -747,6 +773,20 @@ function EditProduct() {
                               <Input
                                 id="price-1"
                                 type="number"
+                                placeholder={product?.currentPrice}
+                                value={currentPrice}
+                                onChange={(e) =>
+                                  handleCurrentPriceChange(e.target.value)
+                                }
+                              />
+                            </TableCell>
+                            <TableCell>
+                              <Label htmlFor="price-1" className="sr-only">
+                                MRP
+                              </Label>
+                              <Input
+                                id="price-1"
+                                type="number"
                                 placeholder={product?.price}
                                 value={price}
                                 onChange={(e) => setPrice(e.target.value)}
@@ -762,7 +802,7 @@ function EditProduct() {
                                 placeholder={product?.productDiscount}
                                 value={productDiscount}
                                 onChange={(e) =>
-                                  setProductDiscount(e.target.value)
+                                  handleProductDiscountChange(e.target.value)
                                 }
                               />
                             </TableCell>
@@ -792,6 +832,16 @@ function EditProduct() {
                         </div>
                         <div className="grid gap-3">
                           <Label htmlFor="price-1">Price (₹)</Label>
+                          <Input
+                            id="price-1"
+                            type="number"
+                            placeholder={product?.currentPrice}
+                            value={currentPrice}
+                            onChange={(e) => setCurrentPrice(e.target.value)}
+                          />
+                        </div>
+                        <div className="grid gap-3">
+                          <Label htmlFor="price-1">MRP (₹)</Label>
                           <Input
                             id="price-1"
                             type="number"

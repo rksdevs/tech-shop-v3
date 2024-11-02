@@ -9,7 +9,7 @@ import {
 import Container from "../components/Container";
 import { Clock3, Mail, Mailbox, MapPin, Phone, PhoneCall } from "lucide-react";
 import { Link } from "react-router-dom";
-import shop3 from "../components/assets/images/shop3.jpg";
+import shop2 from "../components/assets/images/shop2.jpeg";
 
 const ContactUs = () => {
   return (
@@ -41,7 +41,7 @@ const ContactUs = () => {
               <CardContent className="flex flex-col gap-4 justify-between p-4">
                 <div className="flex gap-2 text-l font-semibold items-center">
                   <Mail className="w-6 h-6" />
-                  <span>mailto.dev.rakesh@gmail.com</span>
+                  <span>support@computermakers.in</span>
                 </div>
                 <CardFooter className="flex justify-end p-0 pt-4">
                   <div className="text-muted-foreground">for any enquiries</div>
@@ -56,10 +56,10 @@ const ContactUs = () => {
                 <div className="flex gap-2 text-sm font-semibold items-start flex-col justify-start">
                   <span className="flex gap-2 items-center">
                     {" "}
-                    <Mailbox className="w-4 h-4" /> 5th Avenue
+                    <Mailbox className="w-4 h-4" /> No.136
                   </span>
-                  <span>4th Main Road</span>
-                  <span>Silk Board Junction</span>
+                  <span>Amar Radio Building</span>
+                  <span>Sadar Patrappa Rd</span>
                   <span>Bengaluru, Karnataka 560002</span>
                 </div>
               </CardContent>
@@ -73,7 +73,10 @@ const ContactUs = () => {
               <Card className="max-w-full lg:max-w-[25vw]">
                 <CardHeader className="bg-muted/50 text-left pb-1 gap-3">
                   <CardTitle>BANGALORE</CardTitle>
-                  <CardDescription>5th Avenue Bangalore 560068</CardDescription>
+                  <CardDescription>
+                    No.136, Amar Radio Building Sadar Patrappa Rd Bengaluru,
+                    Karnataka 560002
+                  </CardDescription>
                 </CardHeader>
                 <CardContent className="flex flex-col gap-4 p-4">
                   <div className="flex gap-4 p-2">
@@ -86,12 +89,12 @@ const ContactUs = () => {
                   </div>
                   <div className="flex gap-4 p-2">
                     <Mail />
-                    <span>mailto.dev.rakesh@gmail.com</span>
+                    <span>support@computermakers.in</span>
                   </div>
                   <div className="flex gap-4 p-2">
                     <MapPin />
                     <Link
-                      to="https://maps.app.goo.gl/GTaPGoDC6RjPTskAA"
+                      to="https://maps.app.goo.gl/gHNXnQUScsJK38pbA"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="font-medium"
@@ -102,7 +105,7 @@ const ContactUs = () => {
                 </CardContent>
               </Card>
               <img
-                src={shop3}
+                src={shop2}
                 alt="shop"
                 className="col-span-3 w-full h-full md:h-[350px] md:w-[530px] rounded-lg object-contain lg:object-cover"
               />

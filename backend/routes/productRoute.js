@@ -1,6 +1,6 @@
 import express from 'express';
 const router = express.Router();
-import { getAllProducts, getProductById, createProduct, updateProduct, deleteProduct, getProductsByCategory, updateProductStock, createProductReview, getTopRatedProducts, getAllCategories, getAllBrands, getProductsByBrands, getLatestProducts, getFilteredProducts, getAllProductsAdmin, addAllProductsWarranty, getProductFeatureDetails, getProductsByCategoryWithoutPage, updateManyProducts, upload, uploadImage, deleteReview, searchResults, getProductsByOffername, getAllProductsOnDiscount } from '../controller/productController.js';
+import { getAllProducts, getProductById, createProduct, updateProduct, deleteProduct, getProductsByCategory, updateProductStock, createProductReview, getTopRatedProducts, getAllCategories, getAllBrands, getProductsByBrands, getLatestProducts, getFilteredProducts, getAllProductsAdmin, addAllProductsWarranty, getProductFeatureDetails, getProductsByCategoryWithoutPage, updateManyProducts, upload, uploadImage, deleteReview, searchResults, getProductsByOffername, getAllProductsOnDiscount, updateRandomRatings, createBrand, createCategory } from '../controller/productController.js';
 import {admin, protect} from '../middlewares/authMiddleware.js';
 
 router.get("/", getAllProducts);
@@ -23,7 +23,11 @@ router.get("/brand/:brand", getProductsByBrands)
 
 router.get("/category/:category", getProductsByCategory)
 
-router.post('/', protect, admin, createProduct)
+router.post('/', protect, admin, createProduct);
+
+router.post('/add-brand', protect, admin, createBrand);
+
+router.post('/add-category', protect, admin, createCategory);
 
 router.get("/productsByOffername/:offerId", getProductsByOffername);
 
@@ -44,6 +48,8 @@ router.get("/productWithoutPage/:category", getProductsByCategoryWithoutPage);
 router.get("/:id", getProductById)
 
 router.put("/updateMany/Cpus", protect, admin, updateManyProducts);
+
+router.put("/updateMany/random-ratings", protect, admin, updateRandomRatings);
 
 router.post("/uploadImg", upload.single('image'), uploadImage)
 

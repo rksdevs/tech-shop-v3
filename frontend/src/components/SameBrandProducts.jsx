@@ -36,9 +36,12 @@ const SameBrandProducts = ({ brand }) => {
         </Link>
       </div>
       <Carousel className="w-full">
-        <CarouselContent className="-ml-1 h-[43vh] md:h-[43vh] pt-5">
+        <CarouselContent className="-ml-1 pt-5 md:pt-0">
           {trimmedProductsByBrand?.map((product, index) => (
-            <CarouselItem key={index} className="pl-1 basis-1/2 lg:basis-1/5">
+            <CarouselItem
+              key={index}
+              className="pl-1 basis-1/2 lg:basis-1/5 p-1"
+            >
               <div className="p-1">
                 <ProductCard
                   category={product?.category}
@@ -56,8 +59,8 @@ const SameBrandProducts = ({ brand }) => {
             </CarouselItem>
           ))}
         </CarouselContent>
-        <CarouselPrevious className="left-[-15px] top-[200px]" />
-        <CarouselNext className="right-[-15px] top-[200px]" />
+        <CarouselPrevious className="left-[-15px] top-[150px]" />
+        <CarouselNext className="right-[-15px] top-[150px]" />
       </Carousel>
     </div>
   );

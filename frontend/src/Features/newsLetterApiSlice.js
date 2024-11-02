@@ -37,7 +37,14 @@ const newsLetterApiSlice = apiSlice.injectEndpoints({
                 body: data,
             })
         }),
+        sendChatToAdmin: builder.mutation({
+            query: (data)=>({
+                url:`${NEWSLETTER_URL}/share-chat`,
+                method: 'POST',
+                body: data,
+            })
+        }),
     })
 })
 
-export const {useSubscribeToNewsLetterMutation, useDeleteOneSubscriberMutation, useGetAllSubscribersQuery, useSendOffersToSubscribersMutation, useSendProductToSubscribersMutation} = newsLetterApiSlice;
+export const {useSubscribeToNewsLetterMutation, useDeleteOneSubscriberMutation, useGetAllSubscribersQuery, useSendOffersToSubscribersMutation, useSendProductToSubscribersMutation, useSendChatToAdminMutation} = newsLetterApiSlice;

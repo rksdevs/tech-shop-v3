@@ -37,6 +37,11 @@ const userSchema = new mongoose.Schema({
     gptRequestCount: { type: Number, default: 15 },
     gptLastRequest: { type: Date },
     gptLockUntil: { type: Date },
+    threadId: { type: String },
+    messageList:[{
+        role: {type: String, required: true},
+        value: {type: String, required: true}
+    }],
     isAdmin: {
         type: Boolean,
         required: true,
@@ -59,6 +64,19 @@ userSchema.pre('save', async function (next) {
     return await bcrypt.compare(enteredPassword, this.password);
   };
 
+//method to restrict the message list to max 5 
+// Pre-save middleware to check the length of messageList
+userSchema.pre('save', function (next) {
+    const user = this;
+  
+    // Check if the length of messageList exceeds 5
+    if (user.messageList.length > 5) {
+      // Remove the first element (FIFO)
+      user.messageList.shift();
+    }
+  
+    next(); // Continue saving the document
+});
 const User = mongoose.model("User", userSchema);
 
 export default User;

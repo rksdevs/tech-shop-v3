@@ -56,12 +56,70 @@ const createProduct = asyncHandler(async(req,res)=>{
         user: req.user._id,
         image: '/images/sample.jpg',
         countInStock: 0,
-        numReviews: 0,
+        numReviews: 1,
         description: 'Sample Description',
         productDiscount: 0,
         sku: "SAMPLE",
         brand: "AMD",
         category: "Motherboard",
+        rating: 5,
+        isOnOffer: false,
+        compatibilityDetails: {
+            ramFormFactor: "NA",
+        }
+    });
+
+    const createdProduct = await newProduct.save();
+    res.status(200).json(createdProduct);
+})
+
+//@desc Create a new Brand
+//@route POST /api/products
+//@access admin/private
+const createBrand = asyncHandler(async(req,res)=>{
+    const {brand} = req.body;
+    const newProduct = new Product({
+        name: 'Sample Name',
+        price: 0,
+        currentPrice: 0,
+        user: req.user._id,
+        image: '/images/sample.jpg',
+        countInStock: 0,
+        numReviews: 0,
+        description: 'Sample Description',
+        productDiscount: 0,
+        sku: "SAMPLE",
+        brand: brand,
+        category: "Motherboard",
+        rating: 0,
+        isOnOffer: false,
+        compatibilityDetails: {
+            ramFormFactor: "NA",
+        }
+    });
+
+    const createdProduct = await newProduct.save();
+    res.status(200).json(createdProduct);
+})
+
+//@desc Create a new category
+//@route POST /api/products
+//@access admin/private
+const createCategory = asyncHandler(async(req,res)=>{
+    const {category} = req.body;
+    const newProduct = new Product({
+        name: 'Sample Name',
+        price: 0,
+        currentPrice: 0,
+        user: req.user._id,
+        image: '/images/sample.jpg',
+        countInStock: 0,
+        numReviews: 0,
+        description: 'Sample Description',
+        productDiscount: 0,
+        sku: "SAMPLE",
+        brand: "AMD",
+        category: category,
         rating: 0,
         isOnOffer: false,
         compatibilityDetails: {
@@ -77,7 +135,7 @@ const createProduct = asyncHandler(async(req,res)=>{
 //@route  PUT /api/products/:id
 //@access Private/Admin
 const updateProduct = asyncHandler(async(req,res)=>{
-    const {name, price, brand, category, sku, image, countInStock, description, productDiscount, socketType, powerConsumption, chipsetModel, formFactor, memorySlots, ramType, ramFormFactor, warrantyDetails, featureDetails, specificationDetails, otherSpecifications, otherFeatures} = req.body;
+    const {name, price, currentPrice, brand, category, sku, image, countInStock, description, productDiscount, socketType, powerConsumption, chipsetModel, formFactor, memorySlots, ramType, ramFormFactor, warrantyDetails, featureDetails, specificationDetails, otherSpecifications, otherFeatures} = req.body;
 
     const product = await Product.findById(req.params.id);
 
@@ -86,6 +144,7 @@ const updateProduct = asyncHandler(async(req,res)=>{
         product.brand = brand;
         product.category = category;
         product.price = price;
+        product.currentPrice = currentPrice;
         product.sku = sku;
         product.image = image;
         product.countInStock = countInStock;
@@ -97,21 +156,35 @@ const updateProduct = asyncHandler(async(req,res)=>{
         product.compatibilityDetails.memorySlots = memorySlots;
         product.compatibilityDetails.ramType = ramType;
         product.compatibilityDetails.ramFormFactor = ramFormFactor;
-        product.productDiscount = productDiscount;
+        // product.productDiscount = productDiscount;
         product.warrantyDetails = warrantyDetails;
         product.specificationDetails = specificationDetails;
         product.featureDetails = featureDetails;
         product.otherSpecifications = otherSpecifications;
         product.otherFeatures = otherFeatures;
 
-        //if product is in offer and we update the discount to 0
+        // Handling price and discount logic
+        if (productDiscount !== undefined) {
+            product.productDiscount = productDiscount;
+        } else if (currentPrice !== price) {
+            if (currentPrice > price) {
+                throw new Error("Selling price cannot be greater than MRP!");
+            }
+            product.productDiscount = ((price - currentPrice) / price) * 100;
+        } else {
+            product.productDiscount = 0;
+        }
+
+        //syncing product's offer with discount
         if(product.isOnOffer) {
+            //if product is on offer and productDiscount is 0 --> then set product isOnOffer to false
             if(productDiscount === 0) {
                 product.isOnOffer = false;
             } else {
+                //if product is on offer and productDiscount is not 0, then match the productDiscount with offerDiscount, if they dont match set product isOnOffer to false and reset the offerName
                 try {
                     const appliedOffer = await Offer.find({offerName: product.offerName});
-                    if (appliedOffer.offerDiscount !== productDiscount) {
+                    if (appliedOffer && appliedOffer.offerDiscount !== productDiscount) {
                         product.isOnOffer = false;
                         product.offerName = ""
                     }
@@ -122,10 +195,21 @@ const updateProduct = asyncHandler(async(req,res)=>{
             }
         }
 
-        // if(productDiscount > 0) {
-        //     product.price = price - (price * product.productDiscount/100)
+        //productDiscount edge cases
+        if(productDiscount < 0 || productDiscount > 100) {
+            throw new Error("Discount should be between 0 to 100%");
+        }
+
+        // //when we are changing the currentPrice
+        // if(currentPrice !== price) {
+        //     if (currentPrice > price) { //sell price can't be more than MRP
+        //         throw new Error("Sell price cannot be greater than MRP!")
+        //     }
+        //     //setup the productDiscount based on the price difference of currentPrice and price (price is MRP)
+        //     product.productDiscount = (price - currentPrice)/price * 100;
         // } else {
-        //     product.price = price;
+        //     //if price and currentPrice are same - set productDiscount as 0
+        //     product.productDiscount = 0;
         // }
 
         const updatedProduct = await product.save();
@@ -141,7 +225,7 @@ const updateProduct = asyncHandler(async(req,res)=>{
 //@access Private/Admin
 const deleteProduct = asyncHandler(async(req,res)=>{
     const product = await Product.findById(req.params.id);
-
+    
     if (!product) {
         res.status(404);
         throw new Error('Product not found');
@@ -149,11 +233,12 @@ const deleteProduct = asyncHandler(async(req,res)=>{
 
     // Variable to track whether the product was deleted
     let productDeleted = false;
+    // console.log(product);
 
     if (product.image !== "/images/sample.jpg") {
         // Delete image from S3
         const imageKey = product.image.split(".com/")[1]; // Assuming product.image contains the S3 key (filename)
-        
+        console.log(imageKey)
         const params = {
             Bucket: 'computer-makers-products-cpu', // Replace with your S3 bucket name
             Key: imageKey, // Key (filename) of the image to delete
@@ -172,6 +257,14 @@ const deleteProduct = asyncHandler(async(req,res)=>{
         productDeleted = true; // Mark the product as deleted
         res.status(200).json({ message: 'Product and associated image deleted successfully' });
         return; // Exit early to avoid running the second deletion
+    } else {
+        try {
+            await Product.deleteOne({_id: product._id})
+            res.status(200).json({message: 'Product deleted successfully'})
+        } catch (error) {
+            res.status(404);
+        throw new Error('Resource not found!')
+        }
     }
 
     
@@ -352,7 +445,6 @@ const getAllCategories = asyncHandler(async(req, res) => {
     try {
         const products = (await Product.find());
         if (products.length > 0) {
-            
             const categories = products.map((product)=> product.category)
             const uniqueCategories = [];
             categories.forEach((category)=> {
@@ -608,7 +700,6 @@ const getProductsByCategoryWithoutPage = asyncHandler(async(req,res)=>{
 const updateManyProducts = asyncHandler(async(req, res)=>{
     try {
         const result = await Product.updateMany(
-            { category: 'CPU' },
             { $mul: { price: 1.00783 } }
         );
         res.status(200).json({ message: 'Prices updated successfully', result });
@@ -616,6 +707,33 @@ const updateManyProducts = asyncHandler(async(req, res)=>{
         res.status(500).json({ message: 'Error updating prices', error });
       }
 })
+
+//@desc Update ratings of all product
+//@route PUT /api/products
+//@access Admin 
+const updateRandomRatings = asyncHandler(async(req, res) =>{
+    try {
+      // Find all products
+      const products = await Product.find();
+  
+      // Loop through each product
+      for (let product of products) {
+        // Generate a random rating between 4 and 5
+        const randomRating = Math.floor(Math.random() * 2) + 4;
+  
+        // Update the product's ratings field
+        await Product.updateOne(
+          { _id: product._id },           // Filter by the document's ID
+          { $set: { rating: randomRating } }  // Set the random rating
+        );
+      }
+  
+      console.log("All products updated with random ratings.");
+      res.status(200).json({message: "All products updated with random ratings."})
+    } catch (error) {
+        res.status(500).json({ message: 'Error updating prices', error });
+    }
+  })
 
 const upload = multer({
     storage: multerS3({
@@ -722,4 +840,4 @@ const getAllProductsOnDiscount = asyncHandler(async(req,res)=>{
 })
 
 
-export {getAllProductsOnDiscount, getProductsByOffername, getAllProducts, getProductById, updateManyProducts, createProduct,getProductsByCategoryWithoutPage, updateProduct, deleteProduct, getProductsByCategory, updateProductStock, createProductReview, getTopRatedProducts, getAllCategories, getAllBrands, getProductsByBrands, getLatestProducts, getFilteredProducts, getAllProductsAdmin, addAllProductsWarranty, getProductFeatureDetails, upload, uploadImage, deleteReview, searchResults}
+export {getAllProductsOnDiscount, getProductsByOffername, getAllProducts, getProductById, updateManyProducts, createProduct,getProductsByCategoryWithoutPage, updateProduct, deleteProduct, getProductsByCategory, updateProductStock, createProductReview, getTopRatedProducts, getAllCategories, getAllBrands, getProductsByBrands, getLatestProducts, getFilteredProducts, getAllProductsAdmin, addAllProductsWarranty, getProductFeatureDetails, upload, uploadImage, deleteReview, searchResults, updateRandomRatings, createCategory, createBrand}

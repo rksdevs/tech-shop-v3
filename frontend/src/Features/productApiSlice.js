@@ -24,6 +24,22 @@ export const productApiSlice = apiSlice.injectEndpoints({
             }),
             invalidatesTags: ['Product']
         }),
+        createBrand: builder.mutation({
+            query: (data) => ({
+                url: `${PRODUCTS_URL}/add-brand`,
+                method: 'POST',
+                body: data,
+            }),
+            invalidatesTags: ['Product']
+        }),
+        createCategory: builder.mutation({
+            query: (data) => ({
+                url: `${PRODUCTS_URL}/add-category`,
+                method: 'POST',
+                body: data,
+            }),
+            invalidatesTags: ['Product']
+        }),
         updateProduct: builder.mutation({
             query: (data) => ({
                 url: `${PRODUCTS_URL}/${data.productId}`,
@@ -169,4 +185,4 @@ export const productApiSlice = apiSlice.injectEndpoints({
     })
 })
 
-export const {useGetProductsQuery, useGetProductsByBrandQuery, useGetProductDetailsQuery, useCreateProductMutation, useUpdateProductMutation, useUploadProductImageMutation, useDeleteProductMutation, useGetProductsByCategoryQuery, useUpdateProductStockMutation, useCreateProductReviewMutation, useGetTopProductsQuery, useGetAllCategoriesQuery, useGetAllBrandsQuery, useGetLatestProductsQuery, useFilteredProductListMutation, useGetAllProductsAdminQuery, useGetProductFeaturesQuery, useGetProductsByCategoryWithoutPageQuery, useUploadImageMutation, useDeleteReviewMutation, useSearchProductsMutation, useGetProductsByOffernameQuery, useGetProductsOnDiscountQuery} = productApiSlice;
+export const {useGetProductsQuery, useGetProductsByBrandQuery, useGetProductDetailsQuery, useCreateProductMutation, useUpdateProductMutation, useUploadProductImageMutation, useDeleteProductMutation, useGetProductsByCategoryQuery, useUpdateProductStockMutation, useCreateProductReviewMutation, useGetTopProductsQuery, useGetAllCategoriesQuery, useGetAllBrandsQuery, useGetLatestProductsQuery, useFilteredProductListMutation, useGetAllProductsAdminQuery, useGetProductFeaturesQuery, useGetProductsByCategoryWithoutPageQuery, useUploadImageMutation, useDeleteReviewMutation, useSearchProductsMutation, useGetProductsByOffernameQuery, useGetProductsOnDiscountQuery, useCreateBrandMutation, useCreateCategoryMutation} = productApiSlice;

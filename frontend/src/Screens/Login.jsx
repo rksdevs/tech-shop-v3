@@ -16,10 +16,12 @@ import { useState } from "react";
 import { setCredentials } from "../Features/authSlice";
 import { useToast } from "../components/ui/use-toast";
 import GoogleAuthLogin from "../components/GoogleAuthLogin";
+import { Eye, EyeOff } from "lucide-react";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -44,6 +46,10 @@ const Login = () => {
       });
     }
   };
+
+  const togglePasswordView = () => {
+    setShowPassword(!showPassword);
+  };
   return (
     <div className="flex flex-col w-full justify-center min-h-[63vh]">
       <Container>
@@ -67,7 +73,7 @@ const Login = () => {
                   required
                 />
               </div>
-              <div className="grid gap-2">
+              <div className="grid gap-2 relative">
                 <div className="flex items-center">
                   <Label htmlFor="password">Password</Label>
                   <Link
@@ -79,10 +85,22 @@ const Login = () => {
                 </div>
                 <Input
                   id="password"
-                  type="password"
+                  type={!showPassword ? "password" : "text"}
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                />
+                <Eye
+                  className={`h-4 w-4 absolute top-[38px] right-[10px] text-primary hover:cursor-pointer ${
+                    showPassword ? "hidden" : ""
+                  }`}
+                  onClick={togglePasswordView}
+                />
+                <EyeOff
+                  className={`h-4 w-4 absolute absolute top-[38px] right-[10px] text-primary hover:cursor-pointer ${
+                    !showPassword ? "hidden" : ""
+                  }`}
+                  onClick={togglePasswordView}
                 />
               </div>
               <Button type="submit" className="w-full">

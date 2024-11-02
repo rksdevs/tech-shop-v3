@@ -12,7 +12,7 @@ export function NavbarTop() {
             <span className="text-[12px]">
               <Phone className="h-[14px]" />
             </span>
-            <span className="text-[12px]">+91 9999999999</span>
+            <span className="text-[12px]">+91 8955787132</span>
           </div>
           <div className="flex flex-rows items-center gap-[5px]">
             <div className="pr-[10px] border-r border-solid border-r-1 ">
@@ -20,7 +20,7 @@ export function NavbarTop() {
             </div>
             <div className="flex flex-rows items-center gap-[5px]">
               <Link
-                to="https://www.instagram.com/bluemoon_rakesh/"
+                to="https://www.instagram.com/computermakers/"
                 target="_blank"
               >
                 <Instagram className="h-[14px]" />

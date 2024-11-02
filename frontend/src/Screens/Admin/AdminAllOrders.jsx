@@ -82,9 +82,9 @@ const AdminAllOrders = () => {
       //   cell: (info) => <img src={`${info.getValue()}`} alt="product-img" />,
       cell: ({ row }) => (
         <p className="pl-4">
-          {row.getValue("orderNo").length > 10
-            ? `${row.getValue("orderNo").substring(0, 10)}...`
-            : row.getValue("orderNo")}
+          {row?.getValue("orderNo")?.length > 10
+            ? `${row?.getValue("orderNo")?.substring(0, 10)}...`
+            : row?.getValue("orderNo")}
         </p>
       ),
     }),
@@ -105,14 +105,14 @@ const AdminAllOrders = () => {
       //   cell: (info) => <img src={`${info.getValue()}`} alt="product-img" />,
       cell: ({ row }) => (
         <p className="pl-4">
-          {row.getValue("customer").length > 10
-            ? `${row.getValue("customer").substring(0, 10)}...`
-            : row.getValue("customer")}
+          {row?.getValue("customer")?.length > 10
+            ? `${row?.getValue("customer")?.substring(0, 10)}...`
+            : row?.getValue("customer")}
         </p>
       ),
       className: "hidden sm:table-cell",
     }),
-    columnHelper.accessor((row) => row.orderItems, {
+    columnHelper.accessor((row) => row?.orderItems, {
       id: "Order Items",
       // accessorKey: "name",
       //   cell: (info) => <img src={`${info.getValue()}`} alt="product-img" />,
@@ -132,7 +132,7 @@ const AdminAllOrders = () => {
       ),
       className: "hidden sm:table-cell",
     }),
-    columnHelper.accessor((row) => row.createdAt, {
+    columnHelper.accessor((row) => row?.createdAt, {
       // id: "Order Date",
       accessorKey: "date",
       header: ({ column }) => {
@@ -148,11 +148,11 @@ const AdminAllOrders = () => {
       },
       //   cell: (info) => <img src={`${info.getValue()}`} alt="product-img" />,
       cell: ({ row }) => (
-        <p className="pl-4">{row.getValue("date").substring(0, 10)}</p>
+        <p className="pl-4">{row?.getValue("date")?.substring(0, 10)}</p>
       ),
       className: "hidden sm:table-cell",
     }),
-    columnHelper.accessor((row) => row.totalPrice, {
+    columnHelper.accessor((row) => row?.totalPrice, {
       // id: "Order Date",
       accessorKey: "totalPrice",
       header: ({ column }) => {
@@ -167,9 +167,11 @@ const AdminAllOrders = () => {
         );
       },
       //   cell: (info) => <img src={`${info.getValue()}`} alt="product-img" />,
-      cell: ({ row }) => <p className="pl-4">₹ {row.getValue("totalPrice")}</p>,
+      cell: ({ row }) => (
+        <p className="pl-4">₹ {row?.getValue("totalPrice")}</p>
+      ),
     }),
-    columnHelper.accessor((row) => row.isPaid, {
+    columnHelper.accessor((row) => row?.isPaid, {
       id: "Paid",
       cell: (info) => (
         <div>
@@ -182,7 +184,7 @@ const AdminAllOrders = () => {
       ),
       className: "hidden sm:table-cell",
     }),
-    columnHelper.accessor((row) => row.isShipped, {
+    columnHelper.accessor((row) => row?.isShipped, {
       id: "Ship",
       cell: (info) => (
         <div>
@@ -195,7 +197,7 @@ const AdminAllOrders = () => {
       ),
       className: "hidden sm:table-cell",
     }),
-    columnHelper.accessor((row) => row.isDelivered, {
+    columnHelper.accessor((row) => row?.isDelivered, {
       id: "Delivery",
       cell: (info) => (
         <div>
@@ -208,7 +210,7 @@ const AdminAllOrders = () => {
       ),
       className: "hidden sm:table-cell",
     }),
-    columnHelper.accessor((row) => row._id, {
+    columnHelper.accessor((row) => row?._id, {
       id: "Actions",
       cell: (info) => (
         <DropdownMenu>
@@ -307,8 +309,8 @@ const AdminAllOrders = () => {
             </TableHeader>
             <TableBody>
               {allOrderstable?.getRowModel().rows.map((row) => (
-                <TableRow key={row.id}>
-                  {row.getVisibleCells().map((cell) => (
+                <TableRow key={row?.id}>
+                  {row?.getVisibleCells().map((cell) => (
                     <TableCell
                       key={cell.id}
                       className={`text-left ${

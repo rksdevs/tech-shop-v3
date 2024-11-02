@@ -23,6 +23,13 @@ const orderApiSlice = apiSlice.injectEndpoints({
                 body: {...details}
             })
         }),
+        manualMarkOrderAsPaid: builder.mutation({
+            query: (data) =>({
+                url: `${ORDERS_URL}/${data.orderDetails}/admin-manual-pay`,
+                method: 'PUT',
+                body: data,
+            })
+        }),
         getMyOrders: builder.query({
             query: () => ({
                 url: `${ORDERS_URL}/myorders`
@@ -84,4 +91,4 @@ const orderApiSlice = apiSlice.injectEndpoints({
     })
 })
 
-export const {useUploadBillMutation, useCreateOrderMutation, useGetOrderDetailsQuery, usePayOrderMutation, useGetMyOrdersQuery, useGetOrdersQuery, useDeliverOrderMutation, useInitiateRazorpayPaymentMutation, useGetRazorpayKeyQuery, useShipOrderMutation, useUpdateOrderWithBillMutation, useCancelOrderByUserMutation} = orderApiSlice;
+export const {useUploadBillMutation, useCreateOrderMutation, useGetOrderDetailsQuery, usePayOrderMutation, useGetMyOrdersQuery, useGetOrdersQuery, useDeliverOrderMutation, useInitiateRazorpayPaymentMutation, useGetRazorpayKeyQuery, useShipOrderMutation, useUpdateOrderWithBillMutation, useCancelOrderByUserMutation, useManualMarkOrderAsPaidMutation} = orderApiSlice;

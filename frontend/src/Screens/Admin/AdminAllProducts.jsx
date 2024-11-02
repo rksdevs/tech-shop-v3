@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   Table,
   TableBody,
@@ -30,6 +30,8 @@ import { MoreHorizontal, PlusCircle, Search } from "lucide-react";
 import sampleImg from "../../components/assets/images/placeholder.svg";
 import { Pagination } from "../../components/ui/pagination";
 import {
+  useCreateBrandMutation,
+  useCreateCategoryMutation,
   useCreateProductMutation,
   useDeleteProductMutation,
   useGetAllProductsAdminQuery,
@@ -46,6 +48,17 @@ import {
   SelectValue,
 } from "../../components/ui/select";
 import { CaretSortIcon } from "@radix-ui/react-icons";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "../../components/ui/dialog";
+import { Label } from "../../components/ui/label";
+import { Checkbox } from "../../components/ui/checkbox";
 
 const AdminAllProducts = () => {
   const navigate = useNavigate();
@@ -56,6 +69,15 @@ const AdminAllProducts = () => {
     createSampleProduct,
     { isLoading: newProductLoading, error: newProductError },
   ] = useCreateProductMutation();
+
+  const [
+    createNewBrand,
+    { isError: newBrandError, isLoading: newBrandLoading },
+  ] = useCreateBrandMutation();
+  const [
+    createNewCateogry,
+    { isError: newCategoryError, isLoading: newCategoryLoading },
+  ] = useCreateCategoryMutation();
 
   const [
     deleteProduct,
@@ -74,9 +96,22 @@ const AdminAllProducts = () => {
     refetch,
   } = useGetAllProductsAdminQuery();
 
+  const [sorting, setSorting] = useState([]);
+  const [columnFilters, setColumnFilters] = useState([]);
+  const [brand, setBrand] = useState("");
+  const [category, setCategory] = useState("");
+  const [brandDialogOpen, setBrandDialogOpen] = useState(false);
+  const [categoryDialogOpen, setCategoryDialogOpen] = useState(false);
+  // const [productDataToShow, setProductDataToShow] = useState([]);
+  const [onlyOutOfStock, setOnlyOutOfStock] = useState(false);
+
   const allProductsData = useMemo(() => {
-    return allProducts || [];
-  }, [allProducts]);
+    if (onlyOutOfStock) {
+      return allProducts?.filter((item) => item?.countInStock === 0);
+    } else {
+      return allProducts || [];
+    }
+  }, [allProducts, onlyOutOfStock]);
 
   const columnHelper = createColumnHelper();
   /** @type import('@tanstack/react-table').columnDef<any>*/
@@ -186,9 +221,6 @@ const AdminAllProducts = () => {
     }),
   ];
 
-  const [sorting, setSorting] = useState([]);
-  const [columnFilters, setColumnFilters] = useState([]);
-
   const allProductstable = useReactTable({
     data: allProductsData,
     columns,
@@ -235,7 +267,45 @@ const AdminAllProducts = () => {
     } catch (error) {
       console.log(error);
       toast({
-        title: "Added new sample product",
+        title: "Something went wrong!",
+        description: error?.message || error?.data?.message,
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleAddNewBrand = async (e, brandToAdd) => {
+    e.preventDefault();
+    try {
+      const res = await createNewBrand({ brand: brandToAdd }).unwrap();
+      refetch();
+      setBrandDialogOpen(false);
+      toast({
+        title: `${res?.brand} added!`,
+      });
+    } catch (error) {
+      console.log(error);
+      toast({
+        title: "Something went wrong!",
+        description: error?.message || error?.data?.message,
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleAddNewCategory = async (e, categoryToAdd) => {
+    e.preventDefault();
+    try {
+      const res = await createNewCateogry({ category: categoryToAdd }).unwrap();
+      refetch();
+      setCategoryDialogOpen(false);
+      toast({
+        title: `${res?.category} added!`,
+      });
+    } catch (error) {
+      console.log(error);
+      toast({
+        title: "Something went wrong!",
         description: error?.message || error?.data?.message,
         variant: "destructive",
       });
@@ -245,25 +315,118 @@ const AdminAllProducts = () => {
   return (
     <div className="flex w-full gap-6">
       <Container className="flex flex-col gap-4">
-        <div className="section-heading flex mt-4 justify-between items-center">
-          <h1 className="text-base md:text-[28px] font-extrabold">Products</h1>
-          <div className="flex items-end gap-4">
-            <Search className="hidden absolute right-[37rem] top-[10.18rem] w-[14px] h-[14px] text-muted-foreground" />
-            <Input
-              placeholder="Search products by name"
-              value={allProductstable.getColumn("name")?.getFilterValue() ?? ""}
-              onChange={(event) =>
-                allProductstable
-                  .getColumn("name")
-                  ?.setFilterValue(event.target.value)
-              }
-              className="max-w-sm"
-            />
+        <div className="section-heading flex flex-col md:flex-row mt-4 gap-10 items-center">
+          <div className="flex justify-between items-center w-full md:w-2/3">
+            <h1 className="text-base md:text-[28px] font-extrabold">
+              Products
+            </h1>
+            <div className="flex flex-row items-center justify-center gap-2">
+              <Checkbox
+                id="outOfStock"
+                checked={onlyOutOfStock}
+                onCheckedChange={() => setOnlyOutOfStock(!onlyOutOfStock)}
+              />
+              <label className="pt-1 text-sm" htmlFor="outOfStock">
+                Out of stock
+              </label>
+            </div>
+            <div className="flex flex-col md:flex-row  items-end gap-4">
+              <Search className="hidden absolute right-[37rem] top-[10.18rem] w-[14px] h-[14px] text-muted-foreground" />
+              <Input
+                placeholder="Search products by name"
+                value={
+                  allProductstable.getColumn("name")?.getFilterValue() ?? ""
+                }
+                onChange={(event) =>
+                  allProductstable
+                    .getColumn("name")
+                    ?.setFilterValue(event.target.value)
+                }
+                className="max-w-sm"
+              />
+            </div>
+          </div>
+          <div className="flex gap-2 justify-between w-full md:w-1/3 mr-0 md:mr-2">
+            <Dialog open={brandDialogOpen} onOpenChange={setBrandDialogOpen}>
+              <DialogTrigger asChild>
+                <Button className="gap-1">
+                  <PlusCircle className="h-4 w-5" />
+                  <span className="sm:whitespace-nowrap">Brand</span>
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader>
+                  <DialogTitle>Add New Brand</DialogTitle>
+                  <DialogDescription>
+                    Add a new brand and edit the product.
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="grid gap-4 py-4">
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="brandName" className="text-right">
+                      Brand Name
+                    </Label>
+                    <Input
+                      id="brandName"
+                      value={brand}
+                      className="col-span-3"
+                      onChange={(e) => setBrand(e.target.value)}
+                    />
+                  </div>
+                </div>
+                <DialogFooter>
+                  <Button
+                    type="submit"
+                    onClick={(e) => handleAddNewBrand(e, brand)}
+                  >
+                    Save changes
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+            <Dialog
+              open={categoryDialogOpen}
+              onOpenChange={setCategoryDialogOpen}
+            >
+              <DialogTrigger asChild>
+                <Button className="gap-1">
+                  <PlusCircle className="h-4 w-5" />
+                  <span className="sm:whitespace-nowrap">Category</span>
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader>
+                  <DialogTitle>Add New Category</DialogTitle>
+                  <DialogDescription>
+                    Add a new category and edit the product.
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="grid gap-4 py-4">
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="categoryName" className="text-right">
+                      Category Name
+                    </Label>
+                    <Input
+                      id="categoryName"
+                      value={category}
+                      className="col-span-3"
+                      onChange={(e) => setCategory(e.target.value)}
+                    />
+                  </div>
+                </div>
+                <DialogFooter>
+                  <Button
+                    type="submit"
+                    onClick={(e) => handleAddNewCategory(e, category)}
+                  >
+                    Save changes
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
             <Button className="gap-1" onClick={(e) => handleAddNewProduct(e)}>
               <PlusCircle className="h-4 w-5" />
-              <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                Add Product
-              </span>
+              <span className="sm:whitespace-nowrap">Product</span>
             </Button>
           </div>
         </div>

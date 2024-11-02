@@ -33,12 +33,12 @@ export const BrandsComponent = ({ allBrands }) => {
             className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 pt-1"
           >
             {brand === "NEXT LEVEL RACING"
-              ? "NL Racing"
+              ? "NL RACING"
               : brand === "TVS ELECTRONICS"
               ? "TVS"
               : brand === "WESTERN DIGITAL (WD)"
               ? "WD"
-              : brand}
+              : brand.toUpperCase()}
           </label>
         </div>
       ))}
