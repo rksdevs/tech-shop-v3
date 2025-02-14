@@ -43,6 +43,9 @@ import { useToast } from "../components/ui/use-toast";
 import PaginationComponentTest from "../components/PaginationComponentAllProducts";
 import EmptyProducts from "../components/EmptyProducts";
 import { Checkbox } from "../components/ui/checkbox";
+import { Helmet } from "react-helmet-async";
+import { Card, CardContent } from "../components/ui/card";
+import { Skeleton } from "../components/ui/skeleton";
 
 const AllProducts = () => {
   const { keyword, pageNumber } = useParams();
@@ -328,13 +331,21 @@ const AllProducts = () => {
 
   return (
     <div className="flex w-full flex-col gap-8">
+      <Helmet>
+        <title>All Products</title>
+        <meta
+          name="description"
+          content="Search for all the products in the all products page"
+        />
+        <link rel="canonical" href="/allproducts" />
+      </Helmet>
       <Container className="flex flex-col gap-8">
         <div className="bread-crumb mt-4">
           <Breadcrumbs />
         </div>
         <div className="flex flex-col">
           <header className="sticky top-0 z-10 flex h-[53px] items-center gap-1 border-b bg-background md:justify-between lg:justify-between">
-            <h1 className="text-xl font-semibold">Products</h1>
+            <h2 className="text-xl font-semibold">Products</h2>
             <div className="hidden md:flex flex-row gap-4">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -492,54 +503,55 @@ const AllProducts = () => {
             <div
               className={`relative grid grid-cols-2 grid-rows-2 md:grid-cols-4 md:grid-rows-4 gap-2 md:gap-4 rounded-xl bg-muted/50 p-1 md:p-4 md:col-span-4 min-h-fit pb-[60px] md:pb-[60px]`}
             >
-              {productsToDisplay?.map((product, index) => (
-                <div className="p-1" key={index}>
-                  <ProductCard
-                    category={product?.category}
-                    name={product?.name}
-                    rating={product?.rating}
-                    ratingCount={product?.numReviews}
-                    price={product?.price}
-                    productId={product?._id}
-                    productDiscount={product?.productDiscount}
-                    isOnOffer={product?.isOnOffer}
-                    currentPrice={product?.currentPrice}
-                    image={product?.image}
-                    countInStock={product?.countInStock}
-                    className="w-[42vw] md:w-[175px]"
-                    nameClass="text-[12px] md:text-[14px]"
-                    ratingClass="h-2 w-2 md:h-3 md:w-3"
-                  />
-                </div>
-              ))}
+              {filterLoading
+                ? Array.from({ length: 16 }, (_, index) => (
+                    <div
+                      key={index}
+                      className="pl-1 basis-1/2 md:basis-1/5 lg:basis-1/5 p-1"
+                    >
+                      <div className="p-1">
+                        <Card
+                          className={`relative w-50 h-auto min-h-[270px] max-h-[calc(100vh-20px)] flex flex-col rounded-xl bg-card overflow-hidden border transition-transform transform hover:scale-105 hover:border-gray-300 p-2 pb-1 text-left relative group`}
+                        >
+                          <div className="flex justify-center items-center space-y-2 ">
+                            <div>
+                              <Skeleton className="h-[138px] w-[138px] rounded" />
+                            </div>
+                          </div>
+                          <CardContent className="p-2 flex flex-col justify-between space-y-2">
+                            <Skeleton className="h-3.5 w-[120px]" />
+                            <Skeleton className="h-3.5 w-[120px]" />
+                            <Skeleton className="h-3.5 w-[120px]" />
+                            <Skeleton className="h-3 w-[100px]" />
+                          </CardContent>
+                        </Card>
+                      </div>
+                    </div>
+                  ))
+                : productsToDisplay?.map((product, index) => (
+                    <div className="p-1" key={index}>
+                      <ProductCard
+                        category={product?.category}
+                        name={product?.name}
+                        rating={product?.rating}
+                        ratingCount={product?.numReviews}
+                        price={product?.price}
+                        productId={product?._id}
+                        productDiscount={product?.productDiscount}
+                        isOnOffer={product?.isOnOffer}
+                        currentPrice={product?.currentPrice}
+                        image={product?.image}
+                        countInStock={product?.countInStock}
+                        className="w-[42vw] md:w-[175px]"
+                        nameClass="text-[12px] md:text-[14px]"
+                        ratingClass="h-2 w-2 md:h-3 md:w-3"
+                        productSlug={product?.slug}
+                      />
+                    </div>
+                  ))}
+
               {emptyResults && <EmptyProducts />}
               <div className="col-span-2 md:col-span-4 mt-4 flex justify-center pagination absolute bottom-2 left-12 md:left-0 w-[70%] md:w-full">
-                {/* <PaginationComponent
-                  currentPage={currentPage}
-                  totalPages={totalPages}
-                /> */}
-                {/* <Pagination>
-                  <PaginationContent>
-                    <PaginationItem>
-                      <PaginationPrevious href="#" />
-                    </PaginationItem>
-                    {Array.from({ length: clientSideNoOfPages }, (_, index) => (
-                      <PaginationItem key={index}>
-                        <Button
-                          onClick={() => setClientSideCurrentPage(index + 1)}
-                        >
-                          {index + 1}
-                        </Button>
-                      </PaginationItem>
-                    ))}
-                    <PaginationItem>
-                      <PaginationEllipsis />
-                    </PaginationItem>
-                    <PaginationItem>
-                      <PaginationNext href="#" />
-                    </PaginationItem>
-                  </PaginationContent>
-                </Pagination> */}
                 <PaginationComponentTest
                   currentPage={clientSideCurrentPage}
                   totalPages={clientSideNoOfPages}
@@ -554,6 +566,8 @@ const AllProducts = () => {
             <img
               src={saleTwo}
               alt="banner"
+              height="80"
+              width="80"
               className="w-full h-full rounded-l-md"
             />
           </div>
@@ -581,6 +595,8 @@ const AllProducts = () => {
             <img
               src={saleThree}
               alt="banner"
+              height="80"
+              width="80"
               className="w-full h-full rounded-r-md"
             />
           </div>

@@ -22,6 +22,7 @@ import {
   useGetSpecificPrebuiltPcQuery,
   useUpdatePrebuiltPcMutation,
 } from "../../Features/pcConfigureApiSlice";
+import { Helmet } from "react-helmet-async";
 
 const EditPrebuiltPc = () => {
   const { userInfo } = useSelector((state) => state.auth);
@@ -96,6 +97,14 @@ const EditPrebuiltPc = () => {
 
   return (
     <div className="flex w-full flex-col gap-8 h-[63vh]">
+      <Helmet>
+        <title>Edit Pre-built PC</title>
+        <meta
+          name="description"
+          content="Edit or update a specific pre-built pc"
+        />
+        <link rel="canonical" href="/admin/editPrebuiltPc/:id" />
+      </Helmet>
       <Container className="flex flex-col gap-8">
         <div className="grid gap-4 overflow-auto py-4 md:grid-cols-4 lg:grid-cols-4">
           <div className="side-bar grid md:col-span-1"></div>

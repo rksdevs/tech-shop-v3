@@ -34,6 +34,9 @@ import {
   setBrandFilter,
   setPrimaryCategoryFilter,
 } from "../Features/filterSlice";
+import { Helmet } from "react-helmet-async";
+import { Card, CardContent } from "../components/ui/card";
+import { Skeleton } from "../components/ui/skeleton";
 
 const HomeScreen = () => {
   const { theme } = useSelector((state) => state.theme);
@@ -94,6 +97,14 @@ const HomeScreen = () => {
 
   return (
     <div className="flex w-full flex-col gap-8 overflow-hidden">
+      <Helmet>
+        <title>Computermakers - Home Page</title>
+        <meta
+          name="description"
+          content="Computermakers - AI powered e-commerce for your computer needs."
+        />
+        <link rel="canonical" href="/" />
+      </Helmet>
       <div className="banner relative flex flex-col lg:flex-row bg-muted max-w-full max-h-[40vh] mt-4 py-4 rounded-md overflow-hidden">
         <div className="relative content flex flex-col gap-4 flex-1 p-4 lg:px-[5vw] lg:py-[3vh] items-start text-left z-10 pt-10 md:pt-4 flex-shrink">
           <h2
@@ -110,7 +121,7 @@ const HomeScreen = () => {
           >
             Now with the powers of AI{" "}
             <span className="italic font-bold tracking-[0.075rem] text-[3.5vw] lg:text-[1.3vw] text-primary">
-              HALO
+              MERLIN
             </span>
           </p>
           <Link to="/allproducts">
@@ -124,6 +135,8 @@ const HomeScreen = () => {
           <img
             src={bannerOne}
             alt="banner"
+            height="80"
+            width="80"
             className="w-full h-full object-cover lg:object-contain relative lg:absolute left-[7em]"
           />
         </div>
@@ -178,66 +191,54 @@ const HomeScreen = () => {
         </div>
         <Carousel className="w-full overflow-x-hidden">
           <CarouselContent className="-ml-1 pt-5 md:pt-0">
-            {topProducts?.map((product, index) => (
-              <CarouselItem
-                key={index}
-                className="pl-1 basis-1/2 md:basis-1/5 lg:basis-1/5 p-1"
-              >
-                <div className="p-1">
-                  <ProductCard
-                    category={product?.category}
-                    countInStock={product?.countInStock}
-                    name={product?.name}
-                    rating={product?.rating}
-                    ratingCount={product?.numReviews}
-                    price={product?.price}
-                    productId={product?._id}
-                    productDiscount={product?.productDiscount}
-                    isOnOffer={product?.isOnOffer}
-                    currentPrice={product?.currentPrice}
-                    image={product?.image}
-                  />
-                </div>
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-          <CarouselPrevious className="flex left-0 top-[9rem]" />
-          <CarouselNext className="flex right-0 top-[9rem]" />
-        </Carousel>
-      </div>
-      <div className="latest flex flex-col gap-6">
-        <div className="flex w-full justify-between items-center">
-          <div>
-            <h3 className="text-[18px] font-[700]">Latest Products</h3>
-          </div>
-          <Link to="/allproducts">
-            <Button>View All</Button>
-          </Link>
-        </div>
-        <Carousel className="w-full overflow-x-hidden">
-          <CarouselContent className="-ml-1 pt-5 md:pt-0">
-            {latestProducts?.map((product, index) => (
-              <CarouselItem
-                key={index}
-                className="pl-1 basis-1/2 md:basis-1/5 lg:basis-1/5 p-1"
-              >
-                <div className="p-1">
-                  <ProductCard
-                    category={product?.category}
-                    countInStock={product?.countInStock}
-                    name={product?.name}
-                    rating={product?.rating}
-                    ratingCount={product?.numReviews}
-                    price={product?.price}
-                    productId={product?._id}
-                    productDiscount={product?.productDiscount}
-                    isOnOffer={product?.isOnOffer}
-                    currentPrice={product?.currentPrice}
-                    image={product?.image}
-                  />
-                </div>
-              </CarouselItem>
-            ))}
+            {topProductsLoading
+              ? Array.from({ length: 5 }, (_, index) => (
+                  <CarouselItem
+                    key={index}
+                    className="pl-1 basis-1/2 md:basis-1/5 lg:basis-1/5 p-1"
+                  >
+                    <div className="p-1">
+                      <Card
+                        className={`relative w-50 h-auto min-h-[270px] max-h-[calc(100vh-20px)] flex flex-col rounded-xl bg-card overflow-hidden border transition-transform transform hover:scale-105 hover:border-gray-300 p-2 pb-1 text-left relative group`}
+                      >
+                        <div className="flex justify-center items-center space-y-2 ">
+                          <div>
+                            <Skeleton className="h-[138px] w-[138px] rounded" />
+                          </div>
+                        </div>
+                        <CardContent className="p-4 py-2 flex flex-col justify-between space-y-2">
+                          <Skeleton className="h-4 w-[138px]" />
+                          <Skeleton className="h-4 w-[138px]" />
+                          <Skeleton className="h-3.5 w-[120px]" />
+                          <Skeleton className="h-3 w-[110px]" />
+                        </CardContent>
+                      </Card>
+                    </div>
+                  </CarouselItem>
+                ))
+              : topProducts?.map((product, index) => (
+                  <CarouselItem
+                    key={index}
+                    className="pl-1 basis-1/2 md:basis-1/5 lg:basis-1/5 p-1"
+                  >
+                    <div className="p-1">
+                      <ProductCard
+                        category={product?.category}
+                        countInStock={product?.countInStock}
+                        name={product?.name}
+                        rating={product?.rating}
+                        ratingCount={product?.numReviews}
+                        price={product?.price}
+                        productId={product?._id}
+                        productDiscount={product?.productDiscount}
+                        isOnOffer={product?.isOnOffer}
+                        currentPrice={product?.currentPrice}
+                        image={product?.image}
+                        productSlug={product?.slug}
+                      />
+                    </div>
+                  </CarouselItem>
+                ))}
           </CarouselContent>
           <CarouselPrevious className="flex left-0 top-[9rem]" />
           <CarouselNext className="flex right-0 top-[9rem]" />
@@ -263,6 +264,8 @@ const HomeScreen = () => {
             <img
               src={saleOne}
               alt="banner"
+              height="80"
+              width="80"
               className="w-full h-full object-cover rounded-r-md"
             />
           </div>
@@ -289,6 +292,8 @@ const HomeScreen = () => {
               <img
                 src={customPcImgTwo}
                 alt="banner"
+                height="80"
+                width="80"
                 className="w-full h-full rounded-r-md object-cover"
               />
             </div>
@@ -314,11 +319,77 @@ const HomeScreen = () => {
               <img
                 src={customPcImg}
                 alt="banner"
+                height="80"
+                width="80"
                 className="w-full h-full rounded-r-md object-cover"
               />
             </div>
           </div>
         </div>
+      </div>
+      <div className="latest flex flex-col gap-6">
+        <div className="flex w-full justify-between items-center">
+          <div>
+            <h3 className="text-[18px] font-[700]">Latest Products</h3>
+          </div>
+          <Link to="/allproducts">
+            <Button>View All</Button>
+          </Link>
+        </div>
+        <Carousel className="w-full overflow-x-hidden">
+          <CarouselContent className="-ml-1 pt-5 md:pt-0">
+            {latestProductsLoading
+              ? Array.from({ length: 5 }, (_, index) => (
+                  <CarouselItem
+                    key={index}
+                    className="pl-1 basis-1/2 md:basis-1/5 lg:basis-1/5 p-1"
+                  >
+                    <div className="p-1">
+                      <Card
+                        className={`relative w-50 h-auto min-h-[270px] max-h-[calc(100vh-20px)] flex flex-col rounded-xl bg-card overflow-hidden border transition-transform transform hover:scale-105 hover:border-gray-300 p-2 pb-1 text-left relative group`}
+                      >
+                        <div className="flex justify-center items-center space-y-2 ">
+                          <div>
+                            <Skeleton className="h-[138px] w-[138px] rounded" />
+                          </div>
+                        </div>
+                        <CardContent className="p-4 py-2 flex flex-col justify-between space-y-2">
+                          <Skeleton className="h-4 w-[138px]" />
+                          <Skeleton className="h-4 w-[138px]" />
+                          <Skeleton className="h-3.5 w-[120px]" />
+                          <Skeleton className="h-3 w-[110px]" />
+                        </CardContent>
+                      </Card>
+                    </div>
+                  </CarouselItem>
+                ))
+              : latestProducts?.map((product, index) => (
+                  <CarouselItem
+                    key={index}
+                    className="pl-1 basis-1/2 md:basis-1/5 lg:basis-1/5 p-1"
+                  >
+                    <div className="p-1">
+                      <ProductCard
+                        category={product?.category}
+                        countInStock={product?.countInStock}
+                        name={product?.name}
+                        rating={product?.rating}
+                        ratingCount={product?.numReviews}
+                        price={product?.price}
+                        productId={product?._id}
+                        productDiscount={product?.productDiscount}
+                        isOnOffer={product?.isOnOffer}
+                        currentPrice={product?.currentPrice}
+                        image={product?.image}
+                        productSlug={product?.slug}
+                      />
+                    </div>
+                  </CarouselItem>
+                ))}
+          </CarouselContent>
+          <CarouselPrevious className="flex left-0 top-[9rem]" />
+          <CarouselNext className="flex right-0 top-[9rem]" />
+        </Carousel>
       </div>
       <div className="featured-brands flex flex-col gap-6">
         <div className="flex w-full justify-between items-center">
@@ -336,25 +407,49 @@ const HomeScreen = () => {
             className="brand flex justify-center items-center w-[18%] h-[20%] hover:cursor-pointer"
             onClick={() => handleBrandCta("Asus")}
           >
-            <img src={asusLogo} alt="Asus" className="brand-img w-1/2 h-1/2" />
+            <img
+              src={asusLogo}
+              alt="Asus"
+              height="80"
+              width="80"
+              className="brand-img w-3/4 h-3/4"
+            />
           </div>
           <div
             className="brand flex justify-center items-center w-[18%] h-[20%] hover:cursor-pointer"
             onClick={() => handleBrandCta("AMD")}
           >
-            <img src={AmdRyzenLogo} alt="Ryzen" className="brand-img" />
+            <img
+              src={AmdRyzenLogo}
+              alt="Ryzen"
+              height="80"
+              width="80"
+              className="brand-img w-3/4 h-3/4"
+            />
           </div>
           <div
             className="brand flex justify-center items-center w-[18%] h-[20%] hover:cursor-pointer"
             onClick={() => handleBrandCta("Intel")}
           >
-            <img src={IntelLogo} alt="Intel" className="brand-img" />
+            <img
+              src={IntelLogo}
+              alt="Intel"
+              height="80"
+              width="80"
+              className="brand-img w-3/4 h-3/4"
+            />
           </div>
           <div
             className="brand flex justify-center items-center w-[18%] h-[20%] hover:cursor-pointer"
             onClick={() => handleBrandCta("Nvidia")}
           >
-            <img src={NvidiaLogo} alt="Nvidia" className="brand-img" />
+            <img
+              src={NvidiaLogo}
+              alt="Nvidia"
+              height="80"
+              width="80"
+              className="brand-img w-3/4 h-3/4"
+            />
           </div>
         </div>
       </div>
@@ -363,6 +458,8 @@ const HomeScreen = () => {
           <img
             src={saleTwo}
             alt="banner"
+            height="80"
+            width="80"
             className="w-full h-full rounded-l-md"
           />
         </div>
@@ -390,6 +487,8 @@ const HomeScreen = () => {
           <img
             src={saleThree}
             alt="banner"
+            height="80"
+            width="80"
             className="w-full h-full rounded-r-md"
           />
         </div>

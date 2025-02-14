@@ -106,6 +106,10 @@ export function NavbarMiddle() {
       <header className="sticky top-0 flex h-14 items-center justify-center gap-4 bg-background lg:px-4 md:px-6 sm:px-0">
         <Container className="flex items-center mx-0 px-0">
           <div className="flex w-full items-center flex-row">
+            <h1 className="sr-only">
+              Computermakers - India's First AI Powered website for PCs &
+              Laptops.
+            </h1>
             <Link to="/">
               <h2 className="text-[20px] md:text-[24px] font-semibold flex flex-row items-center">
                 COMPUTERMAKERS

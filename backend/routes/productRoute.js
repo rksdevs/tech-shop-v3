@@ -1,6 +1,6 @@
 import express from 'express';
 const router = express.Router();
-import { getAllProducts, getProductById, createProduct, updateProduct, deleteProduct, getProductsByCategory, updateProductStock, createProductReview, getTopRatedProducts, getAllCategories, getAllBrands, getProductsByBrands, getLatestProducts, getFilteredProducts, getAllProductsAdmin, addAllProductsWarranty, getProductFeatureDetails, getProductsByCategoryWithoutPage, updateManyProducts, upload, uploadImage, deleteReview, searchResults, getProductsByOffername, getAllProductsOnDiscount, updateRandomRatings, createBrand, createCategory } from '../controller/productController.js';
+import { getAllProducts, getProductById, createProduct, updateProduct, deleteProduct, getProductsByCategory, updateProductStock, createProductReview, getTopRatedProducts, getAllCategories, getAllBrands, getProductsByBrands, getLatestProducts, getFilteredProducts, getAllProductsAdmin, addAllProductsWarranty, getProductFeatureDetails, getProductsByCategoryWithoutPage, updateManyProducts, upload, uploadImage, deleteReview, searchResults, getProductsByOffername, getAllProductsOnDiscount, updateRandomRatings, createBrand, createCategory, getProductBySlug } from '../controller/productController.js';
 import {admin, protect} from '../middlewares/authMiddleware.js';
 
 router.get("/", getAllProducts);
@@ -35,17 +35,19 @@ router.put("/:id", protect, admin, updateProduct);
 
 router.post("/updateProductStock", protect, admin, updateProductStock)
 
-router.delete("/:id", protect, admin, deleteProduct);
+router.delete("/:slug", protect, admin, deleteProduct);
 
 router.post("/:id/reviews", protect, createProductReview);
 
 router.post("/updateall/warranty", protect, admin, addAllProductsWarranty);
 
-router.get("/product/features/:id", getProductFeatureDetails);
+router.get("/product/features/:slug", getProductFeatureDetails);
 
 router.get("/productWithoutPage/:category", getProductsByCategoryWithoutPage);
 
-router.get("/:id", getProductById)
+// router.get("/:id", getProductById);
+
+router.get("/:slug", getProductBySlug);
 
 router.put("/updateMany/Cpus", protect, admin, updateManyProducts);
 

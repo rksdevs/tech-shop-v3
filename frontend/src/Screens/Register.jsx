@@ -26,6 +26,7 @@ import {
   SelectValue,
 } from "../components/ui/select";
 import GoogleAuthLogin from "../components/GoogleAuthLogin";
+import { Helmet } from "react-helmet-async";
 
 const Register = () => {
   const [email, setEmail] = useState("");
@@ -136,6 +137,14 @@ const Register = () => {
 
   return (
     <div className="flex flex-col w-full justify-center min-h-[63vh]">
+      <Helmet>
+        <title>Register Page</title>
+        <meta
+          name="description"
+          content="Dont have an account? Create an account here."
+        />
+        <link rel="canonical" href="/register" />
+      </Helmet>
       <Container>
         <Card className="mx-auto max-w-sm mt-4">
           <CardHeader>

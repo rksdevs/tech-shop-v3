@@ -24,6 +24,8 @@ const OfferComponent = ({ offer }) => {
           <img
             src={products?.offerImg}
             alt="banner"
+            height="90"
+            width="90"
             className="flex w-[90vw] max-h-[25vh] object-cover border rounded-md"
           />
         </div>
@@ -47,6 +49,11 @@ const OfferComponent = ({ offer }) => {
                   isOnOffer={product?.isOnOffer}
                   currentPrice={product?.currentPrice}
                   image={product?.image}
+                  countInStock={product?.countInStock}
+                  className="w-[42vw] md:w-[175px]"
+                  nameClass="text-[12px] md:text-[14px]"
+                  ratingClass="h-2 w-2 md:h-3 md:w-3"
+                  productSlug={product?.slug}
                 />
               </div>
             </CarouselItem>

@@ -32,6 +32,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../components/ui/select";
+import { Helmet } from "react-helmet-async";
 
 const CheckoutScreen = () => {
   const { userInfo } = useSelector((state) => state.auth);
@@ -160,6 +161,14 @@ const CheckoutScreen = () => {
 
   return (
     <div className="flex w-full flex-col gap-8">
+      <Helmet>
+        <title>Checkout</title>
+        <meta
+          name="description"
+          content="Review your shipping details and items you wish to buy on this screen"
+        />
+        <link rel="canonical" href="/checkout" />
+      </Helmet>
       <Container className="flex flex-col gap-4">
         <div className="bread-crumb mt-4">
           <Breadcrumbs />
@@ -349,12 +358,12 @@ const CheckoutScreen = () => {
                       <dl className="grid gap-3">
                         <div className="flex items-center justify-between">
                           <dt className="text-muted-foreground">Customer</dt>
-                          <dd>{userInfo?.name}</dd>
+                          <dd>{userInfo?.data?.name}</dd>
                         </div>
                         <div className="flex items-center justify-between">
                           <dt className="text-muted-foreground">Email</dt>
                           <dd>
-                            <a href="mailto:">{userInfo?.email}</a>
+                            <a href="mailto:">{userInfo?.data?.email}</a>
                           </dd>
                         </div>
                       </dl>
@@ -478,12 +487,12 @@ const CheckoutScreen = () => {
                       <dl className="grid gap-3">
                         <div className="flex items-center justify-between">
                           <dt className="text-muted-foreground">Customer</dt>
-                          <dd>{userInfo?.name}</dd>
+                          <dd>{userInfo?.data?.name}</dd>
                         </div>
                         <div className="flex items-center justify-between">
                           <dt className="text-muted-foreground">Email</dt>
                           <dd>
-                            <a href="mailto:">{userInfo?.email}</a>
+                            <a href="mailto:">{userInfo?.data?.email}</a>
                           </dd>
                         </div>
                       </dl>

@@ -28,6 +28,7 @@ import {
   InputOTPSeparator,
   InputOTPSlot,
 } from "../components/ui/input-otp";
+import { Helmet } from "react-helmet-async";
 
 const ForgotPassword = () => {
   const [recoveryStep, setRecoveryStep] = useState("Account Retreival");
@@ -163,6 +164,14 @@ const ForgotPassword = () => {
 
   return (
     <div className="flex flex-col w-full justify-center min-h-[63vh]">
+      <Helmet>
+        <title>Forgot Password</title>
+        <meta
+          name="description"
+          content="Forgot Password? Retrieve your password here."
+        />
+        <link rel="canonical" href="/forgotPassword" />
+      </Helmet>
       <Container>
         <Card className="mx-auto max-w-sm">
           <CardHeader>

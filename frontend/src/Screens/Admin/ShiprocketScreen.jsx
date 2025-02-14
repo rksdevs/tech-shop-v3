@@ -13,15 +13,6 @@ import {
 } from "../../components/ui/card";
 import { Clock, List, Mail, Truck } from "lucide-react";
 import { useSelector } from "react-redux";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "../../components/ui/dialog";
 import { Button } from "../../components/ui/button";
 import { Label } from "../../components/ui/label";
 import { Input } from "../../components/ui/input";
@@ -34,16 +25,11 @@ import {
   TableRow,
 } from "../../components/ui/table";
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "../../components/ui/tooltip";
-import {
   useCancelShiprocketOrderMutation,
   useCreateShiprocketOrderMutation,
 } from "../../Features/shipRocketApiSlice";
 import { useToast } from "../../components/ui/use-toast";
+import { Helmet } from "react-helmet-async";
 
 const ShiprocketScreen = () => {
   const { userInfo } = useSelector((state) => state.auth);
@@ -204,6 +190,14 @@ const ShiprocketScreen = () => {
   }, [orderData]);
   return (
     <div className="flex w-full flex-col gap-8 mt-4">
+      <Helmet>
+        <title>Edit Shiprocket Order</title>
+        <meta
+          name="description"
+          content="Admin Page to edit shiprocket order"
+        />
+        <link rel="canonical" href="/admin/orderUpdate/shiprocket/:id" />
+      </Helmet>
       <Container className="flex flex-col gap-4">
         <div className="flex flex-col">
           <div className={`section-heading flex justify-start pl-8`}>
@@ -280,7 +274,9 @@ const ShiprocketScreen = () => {
               <Card
                 x-chunk="dashboard-01-chunk-1"
                 className={`relative flex flex-col ${
-                  userInfo?.isAdmin ? "justify-between" : "justify-between"
+                  userInfo?.data?.isAdmin
+                    ? "justify-between"
+                    : "justify-between"
                 }`}
               >
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4 bg-muted/50">

@@ -41,6 +41,7 @@ import {
 } from "../../components/ui/select";
 import { CaretSortIcon } from "@radix-ui/react-icons";
 import { useDispatch } from "react-redux";
+import { Helmet } from "react-helmet-async";
 
 const AdminAllOrders = () => {
   const {
@@ -256,6 +257,14 @@ const AdminAllOrders = () => {
 
   return (
     <div className="flex w-full gap-6">
+      <Helmet>
+        <title>All Orders - Admin</title>
+        <meta
+          name="description"
+          content="Admin page for all the orders placed"
+        />
+        <link rel="canonical" href="/admin/all-orders" />
+      </Helmet>
       <Container className="flex flex-col gap-4">
         <div className="section-heading flex mt-4 justify-between items-center">
           <h1 className="text-base md:text-[28px] font-extrabold">Orders</h1>

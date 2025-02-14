@@ -20,6 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../components/ui/select";
+import bannerOne from "../components/assets/images/banner-4.png";
 import { Skeleton } from "../components/ui/skeleton";
 import ProcessorTable from "../components/TableComponentsCustomPc/ProcessorTable";
 import MotherboardTable from "../components/TableComponentsCustomPc/MotherboardTable";
@@ -112,8 +113,10 @@ import CustomPcComponentCard from "../components/CustomPcComponentCard";
 import CustomPcSelectionTableCard from "../components/CustomPcSelectionTableCard";
 import placeholderimg from "../components/assets/images/place-hold-2.jpg";
 import { Playground } from "../components/Playground";
+import { Helmet } from "react-helmet-async";
 
 const BuildCustomPCScreen = () => {
+  const { theme } = useSelector((state) => state.theme);
   const cart = useSelector((state) => state.cart);
   const { userInfo } = useSelector((state) => state.auth);
   const {
@@ -132,6 +135,7 @@ const BuildCustomPCScreen = () => {
     headphone,
     cabinet,
     totalBuildPrice,
+    totalActualPrice,
   } = useSelector((state) => state.customPc);
   const customPcItems = useSelector((state) => state.customPc);
   const { data: userData, refetch } = useProfileQuery();
@@ -441,15 +445,54 @@ const BuildCustomPCScreen = () => {
 
   return (
     <div className="flex w-full flex-col gap-8">
+      <Helmet>
+        <title>Custom PC</title>
+        <meta
+          name="description"
+          content="Build your custom pc with the help of our AI MERLIN"
+        />
+        <link rel="canonical" href="/buildcustompc" />
+      </Helmet>
       <Container className="flex flex-col gap-4">
         <div className="flex flex-col gap-4">
-          <div className="section-heading flex justify-center mt-4">
+          {/* <div className="section-heading flex justify-center mt-4">
             <h1 className="text-[28px] font-extrabold">
               Build Your Custom PC With Our AI -{" "}
               <span className="italic font-bold tracking-[0.075rem] text-primary">
-                HALO
+                MERLIN
               </span>
             </h1>
+          </div> */}
+          <div className="banner relative flex flex-col lg:flex-row bg-muted max-w-full max-h-[40vh] mt-4 py-4 rounded-md overflow-hidden">
+            <div className="relative content flex flex-col gap-4 flex-1 p-4 lg:px-[5vw] lg:py-[3vh] items-start text-left z-10 pt-10 md:pt-4 flex-shrink">
+              <h2
+                className={`tracking-[0.025rem] font-[700] text-[1.5rem] lg:text-[2vw] leading-[1.75rem] lg:leading-[2.5vw] text-[#ea580c] lg:text-black ${
+                  theme === "dark" ? "lg:text-white" : "lg:text-black"
+                }`}
+              >
+                Build Your Own Custom PC
+              </h2>
+              <p
+                className={`font-medium text-muted-foreground ${
+                  theme === "dark" ? "text-muted-foreground" : "text-muted"
+                } md:text-muted-foreground lg:text-[1vw]`}
+              >
+                Check Performance & Compatibility with our AI -{" "}
+                <span className="italic font-bold tracking-[0.075rem] text-[3.5vw] lg:text-[1.3vw] text-primary">
+                  MERLIN
+                </span>
+              </p>
+            </div>
+            <div className="image lg:relative absolute inset-0 lg:inset-auto flex-1 lg:flex-none lg:w-[390px]">
+              <div className="w-full h-full absolute inset-0 bg-black opacity-25 lg:opacity-0 block lg:hidden"></div>
+              <img
+                src={bannerOne}
+                alt="banner"
+                height="80"
+                width="80"
+                className="w-full h-full object-cover lg:object-contain relative lg:absolute left-[7em]"
+              />
+            </div>
           </div>
           <Separator className="hidden" />
           <Tabs defaultValue="customPC" className="w-full">
@@ -1197,25 +1240,48 @@ const BuildCustomPCScreen = () => {
                               <span className="text-muted-foreground">
                                 Subtotal
                               </span>
-                              <span>
+                              {/* <span>
                                 ₹{" "}
                                 {Number(
-                                  totalBuildPrice - totalBuildPrice * 0.18
+                                  totalActualPrice - totalActualPrice * 0.18
                                 ).toFixed(2)}
+                              </span> */}
+                              <span className="text-primary">
+                                ₹{" "}
+                                <span className="text-primary font-bold">
+                                  {" "}
+                                  {Number(
+                                    totalActualPrice - totalActualPrice * 0.18
+                                  ).toFixed(2)}
+                                </span>
+                                <span className="line-through text-[12px] text-muted-foreground">
+                                  {Number(
+                                    totalBuildPrice - totalBuildPrice * 0.18
+                                  ).toFixed(2)}
+                                </span>
                               </span>
                             </li>
                             <li className="flex items-center justify-between">
                               <span className="text-muted-foreground">Tax</span>
                               <span>
-                                ₹ {Number(totalBuildPrice * 0.18).toFixed(2)}
+                                ₹{" "}
+                                <span>
+                                  {Number(totalActualPrice * 0.18).toFixed(2)}
+                                </span>
                               </span>
                             </li>
                             <li className="flex items-center justify-between font-semibold">
                               <span className="text-muted-foreground">
                                 Total
                               </span>
-                              <span>
-                                ₹ {Number(totalBuildPrice).toFixed(2)}
+                              <span className="text-primary font-bold">
+                                ₹{" "}
+                                <span>
+                                  {Number(totalActualPrice).toFixed(2)}
+                                </span>
+                                <span className="line-through text-[12px] font-light text-muted-foreground">
+                                  {Number(totalBuildPrice).toFixed(2)}
+                                </span>
                               </span>
                             </li>
                           </ul>
@@ -1264,13 +1330,13 @@ const BuildCustomPCScreen = () => {
                               </DialogHeader>
                               <fieldset className="flex flex-col gap-4 rounded-lg border p-4 col-span-3">
                                 <legend className="-ml-1 px-1 text-sm font-medium">
-                                  HALO
+                                  MERLIN
                                 </legend>
                                 <Card className="h-[410px]">
                                   {" "}
                                   {/* Set a fixed height for the Card */}
                                   <CardHeader className="rounded-t-xl bg-muted/50">
-                                    <CardTitle>HALO's Prediction</CardTitle>
+                                    <CardTitle>MERLIN's Prediction</CardTitle>
                                   </CardHeader>
                                   <CardContent className="pt-4 text-sm overflow-y-auto max-h-[75%] scrollbar">
                                     {" "}
@@ -1429,7 +1495,7 @@ const BuildCustomPCScreen = () => {
                                 className="mt-2"
                                 onClick={(e) => handleMerlinQuery(e)}
                               >
-                                Ask HALO
+                                Ask MERLIN
                               </Button>
                             ) : (
                               <Button
@@ -1445,13 +1511,13 @@ const BuildCustomPCScreen = () => {
                     </fieldset>
                     <fieldset className="flex flex-col gap-4 rounded-lg border p-4">
                       <legend className="-ml-1 px-1 text-sm font-medium">
-                        HALO
+                        MERLIN
                       </legend>
                       <Card className="h-[370px]">
                         {" "}
                         {/* Set a fixed height for the Card */}
                         <CardHeader className="rounded-t-xl bg-muted/50">
-                          <CardTitle>HALO's Prediction</CardTitle>
+                          <CardTitle>MERLIN's Prediction</CardTitle>
                         </CardHeader>
                         <CardContent className="pt-4 text-sm overflow-y-auto">
                           {" "}

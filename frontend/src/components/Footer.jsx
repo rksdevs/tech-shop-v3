@@ -124,14 +124,34 @@ const Footer = () => {
               <h2 className="font-bold text-large">Accepted Payments</h2>
             </div>
             <div className="payment-btns flex gap-2">
-              <img src={visaLogo} alt="visa" className="h-[30px] w-[30px]" />
+              <img
+                src={visaLogo}
+                alt="visa"
+                height="30"
+                width="30"
+                className="h-[30px] w-[30px]"
+              />
               <img
                 src={masterCardLogo}
                 alt="mastercard"
+                height="30"
+                width="30"
                 className="h-[30px] w-[30px]"
               />
-              <img src={gpayLogo} alt="gpay" className="h-[30px] w-[30px]" />
-              <img src={upiLogo} alt="upi" className="h-[30px] w-[30px]" />
+              <img
+                src={gpayLogo}
+                alt="gpay"
+                height="30"
+                width="30"
+                className="h-[30px] w-[30px]"
+              />
+              <img
+                src={upiLogo}
+                alt="upi"
+                height="30"
+                width="30"
+                className="h-[30px] w-[30px]"
+              />
             </div>
           </div>
         </div>

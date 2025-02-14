@@ -44,6 +44,7 @@ import {
 } from "../../components/ui/select";
 import { CaretSortIcon } from "@radix-ui/react-icons";
 import { useDispatch } from "react-redux";
+import { Helmet } from "react-helmet-async";
 
 const AdminAllUsers = () => {
   const {
@@ -203,6 +204,14 @@ const AdminAllUsers = () => {
 
   return (
     <div className="flex w-full gap-6">
+      <Helmet>
+        <title>All Users - Admin</title>
+        <meta
+          name="description"
+          content="Admin page to show the list of all users."
+        />
+        <link rel="canonical" href="/admin/all-users" />
+      </Helmet>
       <Container className="flex flex-col gap-4">
         <div className="section-heading flex mt-4 justify-between items-center">
           <h1 className="text-base md:text-[28px] font-extrabold">Users</h1>

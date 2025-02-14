@@ -21,6 +21,7 @@ import { logout, setCredentials } from "../Features/authSlice";
 import { useEffect, useState } from "react";
 import { useToast } from "../components/ui/use-toast";
 import { useDeleteOneSubscriberMutation } from "../Features/newsLetterApiSlice";
+import { Helmet } from "react-helmet-async";
 
 const AccountSettings = () => {
   const { userInfo } = useSelector((state) => state.auth);
@@ -46,7 +47,7 @@ const AccountSettings = () => {
         if (confirmPassword === password) {
           const res = await updateUserProfile({
             name,
-            email: userInfo?.email,
+            email: userInfo?.data?.email,
             password,
           }).unwrap();
           dispatch(setCredentials({ ...res }));
@@ -89,7 +90,7 @@ const AccountSettings = () => {
     e.preventDefault();
     try {
       const res = await unsubscribe({
-        email: userInfo?.email,
+        email: userInfo?.data?.email,
       }).unwrap();
       toast({
         title: res?.data?.message || res?.message,
@@ -105,14 +106,22 @@ const AccountSettings = () => {
   };
 
   useEffect(() => {
-    if (userInfo?.name) {
-      setName(userInfo?.name);
+    if (userInfo?.data?.name) {
+      setName(userInfo?.data?.name);
       setPassword("");
     }
   }, [userInfo]);
 
   return (
     <div className="flex w-full flex-col gap-8">
+      <Helmet>
+        <title>Account Settings</title>
+        <meta
+          name="description"
+          content="Account settings page to update your account details"
+        />
+        <link rel="canonical" href="/myaccount" />
+      </Helmet>
       <Container className="flex flex-col gap-8">
         <div className="grid gap-4 overflow-auto py-4 md:grid-cols-4 lg:grid-cols-4">
           <div className="side-bar grid md:col-span-1">
@@ -125,8 +134,8 @@ const AccountSettings = () => {
                   />
                   <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
-                <CardTitle>{userInfo?.name}</CardTitle>
-                <CardDescription>{userInfo?.email}</CardDescription>
+                <CardTitle>{userInfo?.data?.name}</CardTitle>
+                <CardDescription>{userInfo?.data?.email}</CardDescription>
               </CardHeader>
               <CardContent className="pt-6">
                 <ul className="flex flex-col gap-4">
@@ -189,7 +198,7 @@ const AccountSettings = () => {
                           <Label htmlFor="name">Name</Label>
                           <Input
                             id="name"
-                            placeholder={userInfo?.name}
+                            placeholder={userInfo?.data?.name}
                             required
                             value={name}
                             onChange={(e) => setName(e.target.value)}
@@ -199,7 +208,7 @@ const AccountSettings = () => {
                           <Label htmlFor="last-name">Email</Label>
                           <Input
                             id="last-name"
-                            value={userInfo?.email}
+                            value={userInfo?.data?.email}
                             readOnly
                           />
                         </div>

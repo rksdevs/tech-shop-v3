@@ -45,11 +45,40 @@ const getProductById = asyncHandler(async(req,res)=>{
     }
 })
 
+//@desc Fetch one product by ID
+//@route GET /api/products/:slug
+//@access Public
+
+const getProductBySlug = asyncHandler(async(req,res)=> {
+    // const product = await Product.findOne({slug: req.params.slug})
+    const { slug } = req.params; // Debugging line
+
+    if (!slug) {
+        return res.status(400).json({ error: "Slug is required" });
+    }
+
+    const product = await Product.findOne({ slug: slug });
+
+    if (!product) {
+        res.status(404);
+        throw new Error("Product not found! Here is a pancake..");
+    } else {
+        res.json(product);
+    }
+})
+
 //@desc Create a product
 //@route POST /api/products
 //@access admin/private
 const createProduct = asyncHandler(async(req,res)=>{
-    const newProduct = new Product({
+
+    const sampleProduct = await Product.findOne({name: "Sample Name"})
+
+    if (sampleProduct) {
+        res.status(400);
+        throw new Error('Sample product already exist, delete or update to add more sample');
+    } else {
+        const newProduct = new Product({
         name: 'Sample Name',
         price: 0,
         currentPrice: 0,
@@ -71,6 +100,7 @@ const createProduct = asyncHandler(async(req,res)=>{
 
     const createdProduct = await newProduct.save();
     res.status(200).json(createdProduct);
+    }
 })
 
 //@desc Create a new Brand
@@ -78,7 +108,14 @@ const createProduct = asyncHandler(async(req,res)=>{
 //@access admin/private
 const createBrand = asyncHandler(async(req,res)=>{
     const {brand} = req.body;
-    const newProduct = new Product({
+
+    const sampleProduct = await Product.findOne({name: "Sample Name"})
+
+    if (sampleProduct) {
+        res.status(400);
+        throw new Error('Sample product already exist, delete or update the sample to continue');
+    } else {
+        const newProduct = new Product({
         name: 'Sample Name',
         price: 0,
         currentPrice: 0,
@@ -100,6 +137,7 @@ const createBrand = asyncHandler(async(req,res)=>{
 
     const createdProduct = await newProduct.save();
     res.status(200).json(createdProduct);
+    }
 })
 
 //@desc Create a new category
@@ -107,7 +145,14 @@ const createBrand = asyncHandler(async(req,res)=>{
 //@access admin/private
 const createCategory = asyncHandler(async(req,res)=>{
     const {category} = req.body;
-    const newProduct = new Product({
+
+    const sampleProduct = await Product.findOne({name: "Sample Name"})
+
+    if (sampleProduct) {
+        res.status(400);
+        throw new Error('Sample product already exist, delete or update the sample to continue');
+    } else {
+        const newProduct = new Product({
         name: 'Sample Name',
         price: 0,
         currentPrice: 0,
@@ -129,15 +174,18 @@ const createCategory = asyncHandler(async(req,res)=>{
 
     const createdProduct = await newProduct.save();
     res.status(200).json(createdProduct);
+
+    }
 })
 
 //@desc   Update a product
 //@route  PUT /api/products/:id
 //@access Private/Admin
 const updateProduct = asyncHandler(async(req,res)=>{
-    const {name, price, currentPrice, brand, category, sku, image, countInStock, description, productDiscount, socketType, powerConsumption, chipsetModel, formFactor, memorySlots, ramType, ramFormFactor, warrantyDetails, featureDetails, specificationDetails, otherSpecifications, otherFeatures} = req.body;
+    const {name, price, currentPrice, brand, category, sku, image, countInStock, description, productDiscount, socketType, powerConsumption, chipsetModel, formFactor, memorySlots, ramType, ramFormFactor, warrantyDetails, featureDetails, specificationDetails, otherSpecifications, otherFeatures, offerName, isOnOffer} = req.body;
 
     const product = await Product.findById(req.params.id);
+    // console.log(product);
 
     if (product) {
         product.name = name;
@@ -162,7 +210,8 @@ const updateProduct = asyncHandler(async(req,res)=>{
         product.featureDetails = featureDetails;
         product.otherSpecifications = otherSpecifications;
         product.otherFeatures = otherFeatures;
-
+        product.offerName = offerName;
+        product.isOnOffer = isOnOffer;
         // Handling price and discount logic
         if (productDiscount !== undefined) {
             product.productDiscount = productDiscount;
@@ -184,9 +233,11 @@ const updateProduct = asyncHandler(async(req,res)=>{
                 //if product is on offer and productDiscount is not 0, then match the productDiscount with offerDiscount, if they dont match set product isOnOffer to false and reset the offerName
                 try {
                     const appliedOffer = await Offer.find({offerName: product.offerName});
-                    if (appliedOffer && appliedOffer.offerDiscount !== productDiscount) {
-                        product.isOnOffer = false;
-                        product.offerName = ""
+                    if(appliedOffer && appliedOffer.offerDiscount !== 0 && appliedOffer.status === "Active") { //if offerDiscount is 0, then the offer can be applied on all products with their current discount, so no need to reset the product discount to match offer discount
+                        if (appliedOffer.offerDiscount !== productDiscount) {
+                            product.isOnOffer = false;
+                            product.offerName = ""
+                        }
                     }
                 } catch (error) {
                     console.log(error);
@@ -224,7 +275,7 @@ const updateProduct = asyncHandler(async(req,res)=>{
 //@route  DELETE /api/products/:id
 //@access Private/Admin
 const deleteProduct = asyncHandler(async(req,res)=>{
-    const product = await Product.findById(req.params.id);
+    const product = await Product.findOne({slug: req.params.slug});
     
     if (!product) {
         res.status(404);
@@ -651,7 +702,14 @@ const addAllProductsWarranty = asyncHandler(async(req,res)=>{
 //@route GET /api/products
 //@access Public
 const getProductFeatureDetails= asyncHandler(async(req,res)=>{
-    const productId = req.params.id;
+    // const productId = req.params.id;
+    const { slug } = req.params; // Debugging line
+
+    if (!slug) {
+        return res.status(400).json({ error: "Slug is required" });
+    }
+
+    const product = await Product.findOne({ slug: slug });
     // const pageSize = process.env.PAGINATION_LIMIT;
     // const page = Number(req.query.pageNumber) || 1;
 
@@ -664,7 +722,7 @@ const getProductFeatureDetails= asyncHandler(async(req,res)=>{
     // } else {
     //     products = await Product.find();
     // }
-    const product = await Product.findById(productId)
+    // const product = await Product.findById(productId)
     if (product) {
         let updatedFeatures = Object.values(product?.featureDetails).filter((item)=>item !== "" && item !== null && item !== undefined);
         return res.json(updatedFeatures)
@@ -840,4 +898,4 @@ const getAllProductsOnDiscount = asyncHandler(async(req,res)=>{
 })
 
 
-export {getAllProductsOnDiscount, getProductsByOffername, getAllProducts, getProductById, updateManyProducts, createProduct,getProductsByCategoryWithoutPage, updateProduct, deleteProduct, getProductsByCategory, updateProductStock, createProductReview, getTopRatedProducts, getAllCategories, getAllBrands, getProductsByBrands, getLatestProducts, getFilteredProducts, getAllProductsAdmin, addAllProductsWarranty, getProductFeatureDetails, upload, uploadImage, deleteReview, searchResults, updateRandomRatings, createCategory, createBrand}
+export {getAllProductsOnDiscount, getProductsByOffername, getAllProducts, getProductById, updateManyProducts, createProduct,getProductsByCategoryWithoutPage, updateProduct, deleteProduct, getProductsByCategory, updateProductStock, createProductReview, getTopRatedProducts, getAllCategories, getAllBrands, getProductsByBrands, getLatestProducts, getFilteredProducts, getAllProductsAdmin, addAllProductsWarranty, getProductFeatureDetails, upload, uploadImage, deleteReview, searchResults, updateRandomRatings, createCategory, createBrand, getProductBySlug}

@@ -1,6 +1,7 @@
 import Container from "../components/Container";
 import {
   useCreateProductReviewMutation,
+  useGetProductDetailsBySlugQuery,
   useGetProductDetailsQuery,
   useGetProductFeaturesQuery,
   useGetProductsByBrandQuery,
@@ -61,10 +62,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../components/ui/dialog";
+import { Helmet } from "react-helmet-async";
 
 const ProductScreen = () => {
   const { toast } = useToast();
-  const { id: productId } = useParams();
+  const { id: productId, slug: productSlug } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [qty, setQty] = useState(1);
@@ -73,12 +75,19 @@ const ProductScreen = () => {
   const [currentRating, setCurrentRating] = useState(0);
   const [hasSpecifications, setHasSpecifications] = useState(false);
 
+  // const {
+  //   data: product,
+  //   isLoading: productLoading,
+  //   error: productError,
+  //   refetch,
+  // } = useGetProductDetailsQuery(productId);
+
   const {
     data: product,
     isLoading: productLoading,
     error: productError,
     refetch,
-  } = useGetProductDetailsQuery(productId);
+  } = useGetProductDetailsBySlugQuery(productSlug);
 
   const {
     data: productsByCategory,
@@ -96,7 +105,7 @@ const ProductScreen = () => {
     data: productFeatures,
     isLoading: featuresLoading,
     error: featuresError,
-  } = useGetProductFeaturesQuery(productId);
+  } = useGetProductFeaturesQuery(productSlug);
 
   const [addReview, { isLoading: addReviewLoading, error: addReviewError }] =
     useCreateProductReviewMutation();
@@ -125,7 +134,7 @@ const ProductScreen = () => {
   };
 
   const handleRequestFeature = () => {
-    if (userInfo?.isAdmin) {
+    if (userInfo?.data?.isAdmin) {
       navigate(`/admin/allproducts/editProduct/${productId}`);
     }
     toast({
@@ -137,7 +146,7 @@ const ProductScreen = () => {
 
   const handleSubmitReview = async (e) => {
     e.preventDefault();
-    if (userInfo?.name) {
+    if (userInfo?.data?.name) {
       try {
         await addReview({ productId, comment, rating }).unwrap();
         refetch();
@@ -179,6 +188,28 @@ const ProductScreen = () => {
   }, [product]);
   return (
     <div className="flex w-full flex-col gap-8">
+      <Helmet>
+        <title>{`${product?.name} - Computermakers`}</title>
+        <meta
+          name="description"
+          content={product?.description.substring(0, 169)}
+        />
+        <meta property="og:title" content={product?.name} />
+        <meta
+          property="og:description"
+          content={product?.description.substring(0, 169)}
+        />
+        <meta property="og:image" content={product?.image} />
+        <meta
+          property="og:url"
+          content={`https://computermakers.in/product/${product?.slug}`}
+        />
+        <meta property="og:type" content="product" />
+        <link
+          rel="canonical"
+          href={`https://computermakers.in/product/${product?.slug}`}
+        />
+      </Helmet>
       <Container className="flex flex-col gap-8">
         <div className="bread-crumb mt-4">
           <Breadcrumbs />
@@ -199,6 +230,8 @@ const ProductScreen = () => {
                             : product?.image
                         }
                         alt="product-img"
+                        height="300"
+                        width="300"
                         className=" cursor-pointer"
                       />
                     </div>
@@ -253,6 +286,8 @@ const ProductScreen = () => {
                           : product?.image
                       }
                       alt="product-img"
+                      height="350"
+                      width="500"
                       className="w-[500px] h-auto md:h-[350px]"
                     />
                   </div>
@@ -382,10 +417,10 @@ const ProductScreen = () => {
                 </Button>
               </div>
               <div className="buy-section flex gap-4 items-center">
-                {userInfo?.isAdmin ? (
+                {userInfo?.data?.isAdmin ? (
                   <Button
                     onClick={() =>
-                      navigate(`/admin/allproducts/editProduct/${productId}`)
+                      navigate(`/admin/allproducts/editProduct/${productSlug}`)
                     }
                     className="flex items-center gap-2"
                   >
@@ -444,7 +479,9 @@ const ProductScreen = () => {
                       Features are yet to be added!
                     </div>
                     <Button onClick={handleRequestFeature}>
-                      {userInfo?.isAdmin ? "Edit Product" : "Request Feature"}
+                      {userInfo?.data?.isAdmin
+                        ? "Edit Product"
+                        : "Request Feature"}
                     </Button>
                   </Card>
                 ) : (
@@ -471,7 +508,9 @@ const ProductScreen = () => {
                       Specifications are yet to be added!
                     </div>
                     <Button onClick={handleRequestFeature}>
-                      {userInfo?.isAdmin ? "Edit Product" : "Request Feature"}
+                      {userInfo?.data?.isAdmin
+                        ? "Edit Product"
+                        : "Request Feature"}
                     </Button>
                   </Card>
                 ) : (
@@ -673,7 +712,7 @@ const ProductScreen = () => {
                         Features are yet to be added!
                       </div>
                       <Button onClick={handleRequestFeature}>
-                        {userInfo?.isAdmin ? "Edit Product" : "Request Feature"}
+                        {userInfo?.data?.isAdmin ? "Edit Product" : "Request Feature"}
                       </Button>
                     </Card>
                   ) : productFeatures?.length ? (
@@ -711,7 +750,9 @@ const ProductScreen = () => {
                         Features are yet to be added!
                       </div>
                       <Button onClick={handleRequestFeature}>
-                        {userInfo?.isAdmin ? "Edit Product" : "Request Feature"}
+                        {userInfo?.data?.isAdmin
+                          ? "Edit Product"
+                          : "Request Feature"}
                       </Button>
                     </Card>
                   ) : (
@@ -739,7 +780,9 @@ const ProductScreen = () => {
                         Specifications are yet to be added!
                       </div>
                       <Button onClick={handleRequestFeature}>
-                        {userInfo?.isAdmin ? "Edit Product" : "Request Feature"}
+                        {userInfo?.data?.isAdmin
+                          ? "Edit Product"
+                          : "Request Feature"}
                       </Button>
                     </Card>
                   ) : (

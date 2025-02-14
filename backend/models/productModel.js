@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import Offer from "./offerModel.js";
+import slugify from "slugify";
 
 const reviewSchema = new mongoose.Schema({
     user: {
@@ -30,6 +31,10 @@ const productSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
+    },
+    slug: {
+        type: String,
+        unique: true,
     },
     image: {
         type: String,
@@ -215,6 +220,10 @@ productSchema.pre('save', async function (next) {
     if (this.productDiscount === 0) {
         this.isOnOffer = false;
         this.offerName = "";
+    }
+
+    if (this.isModified("name")) {
+        this.slug = slugify(this.name, { lower: true, strict: true });
     }
 
     // if (this.productDiscount > 0 && !this.isOnOffer) {

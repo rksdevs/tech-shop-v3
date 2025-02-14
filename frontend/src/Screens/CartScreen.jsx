@@ -35,6 +35,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useToast } from "../components/ui/use-toast";
 import TopProducts from "../components/TopProducts";
 import { Separator } from "../components/ui/separator";
+import { Helmet } from "react-helmet-async";
 
 const CartScreen = () => {
   const { cartItems, totalPrice } = useSelector((state) => state.cart);
@@ -69,6 +70,14 @@ const CartScreen = () => {
 
   return (
     <div className="flex w-full flex-col gap-8">
+      <Helmet>
+        <title>Cart</title>
+        <meta
+          name="description"
+          content="Your cart, check all the items you have added to the cart here"
+        />
+        <link rel="canonical" href="/cart" />
+      </Helmet>
       <Container className="flex flex-col gap-4">
         <div className="bread-crumb mt-4">
           <Breadcrumbs />
@@ -112,14 +121,16 @@ const CartScreen = () => {
                   <CardHeader className="flex w-1/2 flex-row text-left">
                     <div className="product-img">
                       <img
-                        src={ProductImg}
+                        src={item?.image || ProductImg}
                         alt="Product img"
+                        height="100"
+                        width="100"
                         className="w-[100px] h-[100px]"
                       />
                     </div>
                     <Link
                       className="product-name flex flex-col"
-                      to={`/product/${item?._id}`}
+                      to={`/product/${item?.slug}`}
                     >
                       <p className="px-8 font-bold text-muted-foreground">
                         {item?.category}
@@ -133,7 +144,14 @@ const CartScreen = () => {
                   </CardHeader>
                   <CardContent className="flex flex-grow flex-1 justify-center items-center">
                     <div className="product-price w-full font-bold">
-                      ₹ {Number(item?.currentPrice).toFixed(0)}
+                      ₹ <span>{Number(item?.currentPrice).toFixed(0)}</span>
+                      {item?.productDiscount > 0 ? (
+                        <span className="line-through font-light text-muted-foreground text-[10px]">
+                          {Number(item?.price).toFixed(0)}
+                        </span>
+                      ) : (
+                        ""
+                      )}
                     </div>
                     <div className="product-qty w-full flex gap-2 justify-center items-center">
                       <Select onValueChange={(e) => handleAddToCart(e, item)}>

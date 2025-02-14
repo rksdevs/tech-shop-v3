@@ -55,6 +55,7 @@ const TopProducts = ({ brand }) => {
                   isOnOffer={product?.isOnOffer}
                   currentPrice={product?.currentPrice}
                   image={product?.image}
+                  productSlug={product?.slug}
                 />
               </div>
             </CarouselItem>

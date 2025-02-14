@@ -34,12 +34,14 @@ import EditAdminDetails from './Screens/Admin/EditAdminDetails';
 import ErrorPage from './Screens/ErrorPage';
 import AllOfferScreen from './Screens/AllOfferScreen';
 import ShiprocketScreen from './Screens/Admin/ShiprocketScreen';
+import {HelmetProvider} from "react-helmet-async";
 
 const router = createBrowserRouter(createRoutesFromElements(
 <Route path='/' element={<App />}>
   <Route path='/' index={true} element={<HomeScreen/>} />
   <Route path='/productCard' index element={<ProductCard />} />
-  <Route path='/product/:id' element={<ProductScreen />} />
+  {/* <Route path='/product/:id' element={<ProductScreen />} /> */}
+  <Route path='/product/:slug' element={<ProductScreen />} />
   <Route path='/allproducts' element={<AllProducts />} />
   <Route path='/allproducts/search/:keyword' element={<AllProducts />} />
   <Route path='/allproducts/page/:pageNumber' element={<AllProducts />} />
@@ -69,7 +71,8 @@ const router = createBrowserRouter(createRoutesFromElements(
     <Route path='/admin/all-orders' element={<AdminAllOrders />} />
     <Route path='/admin/all-offers' element={<AdminCreateOffer />} />
     <Route path='/admin/all-users' element={<AdminAllUsers />} />
-    <Route path='/admin/allproducts/editProduct/:id' element={<EditProduct />} />
+    {/* <Route path='/admin/allproducts/editProduct/:id' element={<EditProduct />} /> */}
+    <Route path='/admin/allproducts/editProduct/:slug' element={<EditProduct />} />
     <Route path='/admin/allorders/editOrder/:id' element={<PlaceOrderScreen />} />
     <Route path='/admin/configurePrebuiltPc' element={<ConfigurePrebuiltPc />} />
     <Route path='/admin/editPrebuiltPc/:id' element={<EditPrebuiltPc />} />
@@ -84,9 +87,11 @@ const router = createBrowserRouter(createRoutesFromElements(
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
+    <HelmetProvider>
     <Provider store={store}>
       <RouterProvider router={router} />
     </Provider>
+    </HelmetProvider>
   </React.StrictMode>
 );
 

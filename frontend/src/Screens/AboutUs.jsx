@@ -26,6 +26,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "../components/ui/carousel";
+import { Helmet } from "react-helmet-async";
 
 const AboutUs = () => {
   const {
@@ -42,6 +43,14 @@ const AboutUs = () => {
 
   return (
     <div className="flex w-full flex-col gap-8">
+      <Helmet>
+        <title>About Us</title>
+        <meta
+          name="description"
+          content="Know us better and check out our social media handles"
+        />
+        <link rel="canonical" href="/aboutus" />
+      </Helmet>
       <Container className="flex flex-col gap-4">
         <div className="flex flex-col gap-4 mt-2">
           <div className="section-heading flex justify-center">
@@ -74,19 +83,6 @@ const AboutUs = () => {
                 <CardDescription>Co-Owner</CardDescription>
               </CardHeader>
             </Card>
-            {/* <Card className="h-fit">
-              <CardHeader className="items-center">
-                <Avatar className="h-[150px] w-[150px] mb-4">
-                  <AvatarImage
-                    src="https://github.com/shadcn.png"
-                    alt="@shadcn"
-                  />
-                  <AvatarFallback>CN</AvatarFallback>
-                </Avatar>
-                <CardTitle>Jarvis</CardTitle>
-                <CardDescription>Product Expert</CardDescription>
-              </CardHeader>
-            </Card> */}
           </div>
           <fieldset className="flex flex-col gap-8 rounded-lg border p-4">
             <legend className="-ml-1 px-1 text-sm font-medium">
@@ -99,10 +95,6 @@ const AboutUs = () => {
                     <span className="text-2xl font-semibold tracking-tight">
                       YouTube
                     </span>
-                    {/* <Button
-                      className="flex gap-2 items-center justify-center"
-                      size="sm"
-                    > */}
                     <Link
                       className="flex gap-2 items-center justify-center"
                       to={`https://www.youtube.com/channel/${process.env.REACT_APP_CHANNEL_ID}?sub_confirmation=1`}
@@ -209,6 +201,8 @@ const AboutUs = () => {
                         crossOrigin="anonymous"
                         alt="computermakers"
                         className="rounded-[50%]"
+                        height="80"
+                        width="80"
                       />
                       <AvatarFallback>CN</AvatarFallback>
                     </Avatar>
@@ -261,6 +255,8 @@ const AboutUs = () => {
                         )}`}
                         alt="post"
                         key={post?._id}
+                        height="250"
+                        width="250"
                         className="h-[250px] w-[250px] rounded-lg object-cover transition-all hover:scale-105"
                         crossOrigin="anonymous"
                       />
@@ -301,6 +297,8 @@ const AboutUs = () => {
                             )}`}
                             alt="post"
                             key={post?._id}
+                            height="200"
+                            width="200"
                             className="h-[200px] w-[200px] rounded-lg object-cover transition-all hover:scale-105"
                             crossOrigin="anonymous"
                           />

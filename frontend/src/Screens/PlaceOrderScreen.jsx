@@ -51,6 +51,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "../components/ui/tooltip";
+import { Helmet } from "react-helmet-async";
 
 const PlaceOrderScreen = () => {
   const { userInfo } = useSelector((state) => state.auth);
@@ -334,6 +335,15 @@ const PlaceOrderScreen = () => {
   }, [orderData, userInfo]);
   return (
     <div className="flex w-full flex-col gap-8">
+      <Helmet>
+        <title>Order Screen</title>
+        <meta
+          name="description"
+          content="Find the details of a specific order on this screen"
+        />
+        <link rel="canonical" href="/myOrders/viewOrder" />
+        <link rel="canonical" href="/myOrders/editOrder" />
+      </Helmet>
       <Container className="flex flex-col gap-4 px-0">
         <div
           className={`bread-crumb mt-4 ${

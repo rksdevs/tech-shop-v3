@@ -46,10 +46,11 @@ import { Plus, Trash2, Upload } from "lucide-react";
 import { Textarea } from "../../components/ui/textarea";
 import saleOne from "../../components/assets/images/sale-3.jpg";
 import placeHolderImg from "../../components/assets/images/placeholder.svg";
+import { Helmet } from "react-helmet-async";
 
 const AdminCreateOffer = () => {
   const [offerName, setOfferName] = useState("");
-  const [offerDiscount, setOfferDiscount] = useState("");
+  const [offerDiscount, setOfferDiscount] = useState(0);
   const [status, setStatus] = useState("");
   const [offerId, setOfferId] = useState("");
   const [offerImage, setOfferImage] = useState(
@@ -316,6 +317,14 @@ const AdminCreateOffer = () => {
 
   return (
     <div className="flex w-full flex-col gap-8">
+      <Helmet>
+        <title>Offers - Admin</title>
+        <meta
+          name="description"
+          content="Admin page to create, update & deactivate offers"
+        />
+        <link rel="canonical" href="/admin/all-offers" />
+      </Helmet>
       <Container className="flex flex-col gap-4 mt-2">
         <div className="flex flex-col gap-4">
           <div className="section-heading flex justify-center">
@@ -387,8 +396,9 @@ const AdminCreateOffer = () => {
                         id="discount"
                         placeholder="Enter discount %"
                         type="number"
-                        required
                         value={offerDiscount}
+                        max={100}
+                        min={0}
                         onChange={(e) => setOfferDiscount(e.target.value)}
                       />
                     </div>
@@ -468,6 +478,8 @@ const AdminCreateOffer = () => {
                             // }
                             src={offerImage}
                             alt="upload sample img"
+                            height="80"
+                            width="80"
                             className="aspect-square w-full h-[25vh] rounded-md object-fill"
                           />
                         </div>
@@ -476,7 +488,7 @@ const AdminCreateOffer = () => {
                     <Button
                       type="submit"
                       className="w-full"
-                      disabled={!status || !offerDiscount || !offerName}
+                      disabled={!status || !offerName}
                       onClick={(e) => handleUpdateOffer(e)}
                     >
                       Update

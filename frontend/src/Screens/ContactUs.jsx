@@ -10,10 +10,19 @@ import Container from "../components/Container";
 import { Clock3, Mail, Mailbox, MapPin, Phone, PhoneCall } from "lucide-react";
 import { Link } from "react-router-dom";
 import shop2 from "../components/assets/images/shop2.jpeg";
+import { Helmet } from "react-helmet-async";
 
 const ContactUs = () => {
   return (
     <div className="flex w-full flex-col gap-8">
+      <Helmet>
+        <title>Contact Us</title>
+        <meta
+          name="description"
+          content="Contact us using phone, email or mail. Find our contact details here."
+        />
+        <link rel="canonical" href="/contactus" />
+      </Helmet>
       <Container className="flex flex-col gap-4 mt-2">
         <div className="flex flex-col gap-4">
           <div className="section-heading flex justify-center">
@@ -107,6 +116,8 @@ const ContactUs = () => {
               <img
                 src={shop2}
                 alt="shop"
+                height="300"
+                width="300"
                 className="col-span-3 w-full h-full md:h-[350px] md:w-[530px] rounded-lg object-contain lg:object-cover"
               />
             </div>

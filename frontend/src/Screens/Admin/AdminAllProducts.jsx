@@ -59,6 +59,7 @@ import {
 } from "../../components/ui/dialog";
 import { Label } from "../../components/ui/label";
 import { Checkbox } from "../../components/ui/checkbox";
+import { Helmet } from "react-helmet-async";
 
 const AdminAllProducts = () => {
   const navigate = useNavigate();
@@ -127,6 +128,8 @@ const AdminAllProducts = () => {
               : info.getValue()
           }
           alt="product-img"
+          height="70"
+          width="70"
           className="w-[70px] h-[70px]"
         />
       ),
@@ -161,8 +164,8 @@ const AdminAllProducts = () => {
       className: "hidden sm:table-cell",
     },
     {
-      accessorKey: "brand",
-      header: "Brand",
+      accessorKey: "countInStock",
+      header: "Stock",
       className: "hidden sm:table-cell",
     },
     {
@@ -170,7 +173,7 @@ const AdminAllProducts = () => {
       header: "Category",
       className: "hidden sm:table-cell",
     },
-    columnHelper.accessor((row) => row.price, {
+    columnHelper.accessor((row) => row.currentPrice, {
       accessorKey: "price",
       header: ({ column }) => {
         return (
@@ -179,7 +182,7 @@ const AdminAllProducts = () => {
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
             className=""
           >
-            Price
+            Current Price
             <CaretSortIcon className="ml-2 h-4 w-4" />
           </Button>
         );
@@ -191,7 +194,7 @@ const AdminAllProducts = () => {
         </p>
       ),
     }),
-    columnHelper.accessor((row) => row._id, {
+    columnHelper.accessor((row) => row.slug, {
       id: "Actions",
       cell: (info) => (
         <DropdownMenu>
@@ -314,6 +317,14 @@ const AdminAllProducts = () => {
 
   return (
     <div className="flex w-full gap-6">
+      <Helmet>
+        <title>All Products - Admin</title>
+        <meta
+          name="description"
+          content="Admin page for all the products, admin can edit update products here"
+        />
+        <link rel="canonical" href="/admin/all-products" />
+      </Helmet>
       <Container className="flex flex-col gap-4">
         <div className="section-heading flex flex-col md:flex-row mt-4 gap-10 items-center">
           <div className="flex justify-between items-center w-full md:w-2/3">

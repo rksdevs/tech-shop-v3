@@ -177,15 +177,17 @@ export function Playground({
     let payload = {};
     switch (option) {
       case 1:
-        payload.messageFromUser = "HALO, I want to build my dream pc, help me!";
+        payload.messageFromUser =
+          "MERLIN, I want to build my dream pc, help me!";
         payload.threadId = threadId;
         break;
       case 2:
-        payload.messageFromUser = "HALO, help me buy a programming laptop!";
+        payload.messageFromUser = "MERLIN, help me buy a programming laptop!";
         payload.threadId = threadId;
         break;
       case 3:
-        payload.messageFromUser = "HALO, pick a 27 inch gaming monitor for me!";
+        payload.messageFromUser =
+          "MERLIN, pick a 27 inch gaming monitor for me!";
         payload.threadId = threadId;
         break;
       case 4:
@@ -204,9 +206,9 @@ export function Playground({
   const handleShareChat = async (e) => {
     e.preventDefault();
     const payload = {
-      userName: userInfo?.name,
+      userName: userInfo?.data?.name,
       chatDetails: messageList,
-      userContact: userInfo?.contact,
+      userContact: userInfo?.data?.contact,
     };
     try {
       console.log(payload);
@@ -229,10 +231,10 @@ export function Playground({
         <div className="relative hidden flex-col items-start md:flex row-span-2">
           <Card className="w-full">
             <CardHeader>
-              <CardTitle>Welcome, Meet HALO</CardTitle>
+              <CardTitle>Welcome, Meet MERLIN</CardTitle>
               <CardDescription>
-                HALO is our highly intelligent AI, trained to help you with your
-                quest to find the best PC or laptop for your needs
+                MERLIN is our highly intelligent AI, trained to help you with
+                your quest to find the best PC or laptop for your needs
               </CardDescription>
             </CardHeader>
           </Card>
@@ -271,7 +273,7 @@ export function Playground({
               ) : (
                 <Card className="min-h-[52vh] border-none">
                   <CardHeader>
-                    <CardTitle>HALO</CardTitle>
+                    <CardTitle>MERLIN</CardTitle>
                     <CardDescription>
                       Meet our intelligent AI, who can help you with all your PC
                       needs
@@ -292,7 +294,7 @@ export function Playground({
                       </CardHeader>
                       <CardContent>
                         <p className="text-xs text-muted-foreground text-left">
-                          HALO, I want to build my dream pc, help me!
+                          MERLIN, I want to build my dream pc, help me!
                         </p>
                       </CardContent>
                     </Card>
@@ -310,7 +312,7 @@ export function Playground({
                       </CardHeader>
                       <CardContent>
                         <p className="text-xs text-muted-foreground text-left">
-                          HALO, help me buy a programming laptop!
+                          MERLIN, help me buy a programming laptop!
                         </p>
                       </CardContent>
                     </Card>
@@ -328,7 +330,7 @@ export function Playground({
                       </CardHeader>
                       <CardContent>
                         <p className="text-xs text-muted-foreground text-left">
-                          HALO, pick a 27 inch gaming monitor for me!
+                          MERLIN, pick a 27 inch gaming monitor for me!
                         </p>
                       </CardContent>
                     </Card>
@@ -387,8 +389,8 @@ export function Playground({
             <div className="flex items-center p-3 pt-0 pl-4 gap-4">
               <p className="hidden md:flex text-primary text-sm font-extralight">
                 {!generatingMerlinResponse
-                  ? "HALO is ready to help!"
-                  : "HALO is generating response..."}
+                  ? "MERLIN is ready to help!"
+                  : "MERLIN is generating response..."}
               </p>
               <Button
                 type="submit"

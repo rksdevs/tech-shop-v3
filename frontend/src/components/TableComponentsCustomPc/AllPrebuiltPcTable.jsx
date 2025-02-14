@@ -81,14 +81,16 @@ const AllPrebuiltPcTable = () => {
     columnHelper.accessor((row) => row, {
       id: "Product",
       cell: (info) => (
-        <Link to={`/product/${info.getValue()?._id}`}>
+        <Link to={`/product/${info.getValue()?.slug}`}>
           <img
             src={
-              info.getValue()?.image === "/images/sample.jpg"
+              info.getValue()?.pcImage === "/images/sample.jpg"
                 ? sampleImg
-                : info.getValue()?.image
+                : info.getValue()?.pcImage
             }
             alt="product-img"
+            height="40"
+            width="40"
             className="w-[40px] h-[40px]"
           />
         </Link>

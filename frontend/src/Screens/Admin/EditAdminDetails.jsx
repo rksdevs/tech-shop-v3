@@ -58,6 +58,7 @@ import {
   useSendProductToSubscribersMutation,
 } from "../../Features/newsLetterApiSlice";
 import sampleImg from "../../components/assets/images/placeholder.svg";
+import { Helmet } from "react-helmet-async";
 
 const EditAdminDetails = () => {
   const [ownerName, setOwnerName] = useState("");
@@ -342,6 +343,14 @@ const EditAdminDetails = () => {
 
   return (
     <div className="flex w-full flex-col gap-8">
+      <Helmet>
+        <title>Edit Admin Details</title>
+        <meta
+          name="description"
+          content="Edit Admin details to update the About Us page information"
+        />
+        <link rel="canonical" href="/admin/edit-admin-details" />
+      </Helmet>
       <Container className="flex flex-col gap-4">
         <div className="flex flex-col gap-4 mt-2">
           <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 text-left">
@@ -733,6 +742,8 @@ const EditAdminDetails = () => {
                           // }
                           alt="post"
                           key={postDetailsToEdit?._id}
+                          height="250"
+                          width="250"
                           className="h-[250px] w-[250px] rounded-lg object-cover transition-all hover:scale-105"
                           crossOrigin="anonymous"
                         />
@@ -776,6 +787,8 @@ const EditAdminDetails = () => {
                               : selectedPostImg
                           }
                           alt="upload sample img"
+                          height="120"
+                          width="120"
                           className="aspect-square w-full h-[120px] rounded-md object-cover"
                         />
                       </div>

@@ -7,7 +7,7 @@ const MessageComponent = ({ message }) => {
       }`}
     >
       <div className="font-medium text-start">
-        {message?.role === "assistant" ? "HALO:" : "You:"}
+        {message?.role === "assistant" ? "MERLIN:" : "You:"}
       </div>
       <ReactMarkdown className="text-start font-light react-markdown">
         {message?.value}

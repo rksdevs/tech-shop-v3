@@ -41,6 +41,7 @@ import {
 import { CaretSortIcon } from "@radix-ui/react-icons";
 import { useDispatch } from "react-redux";
 import { useGetMyOrdersQuery } from "../Features/orderApiSlice";
+import { Helmet } from "react-helmet-async";
 
 const MyOrders = () => {
   const {
@@ -228,6 +229,11 @@ const MyOrders = () => {
 
   return (
     <div className="flex w-full gap-6">
+      <Helmet>
+        <title>All Orders Page</title>
+        <meta name="description" content="Find all your previous orders here" />
+        <link rel="canonical" href="/myorders" />
+      </Helmet>
       <Container className="flex flex-col gap-4 mt-2">
         <div className="section-heading flex justify-between items-center">
           <h1 className="text-base md:text-[28px] font-extrabold">My Orders</h1>

@@ -8,7 +8,7 @@ import multerS3 from "multer-s3";
 //@route - /prebuiltpc/configure/create
 //@access - admin/protected
 const createPrebuiltPc = asyncHandler(async(req, res) => {
-    const {pcName, platform, pcCategory, pcUses, pcComponents, pcImage, pcTotalPrice, countInStock} = req.body;
+    const {pcName, platform, pcCategory, pcUses, pcComponents, pcImage, pcTotalPrice, pcActualPrice, countInStock} = req.body;
 
     try {
         const newPrebuiltPc = new PrebuiltPC({
@@ -19,7 +19,8 @@ const createPrebuiltPc = asyncHandler(async(req, res) => {
             pcComponents,
             pcImage,
             pcTotalPrice,
-            countInStock
+            countInStock,
+            pcActualPrice,
         })
     
         const updatedPrebuiltPc = await newPrebuiltPc.save();

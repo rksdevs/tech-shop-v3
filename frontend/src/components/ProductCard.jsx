@@ -27,14 +27,15 @@ const ProductCard = ({
   currentPrice,
   isOnOffer,
   countInStock,
+  productSlug,
 }) => {
   return (
-    <Link to={`/product/${productId}`}>
+    <Link to={`/product/${productSlug}`}>
       <Card
         // className={`relative w-50 h-70 min-h-[310px] max-h-[280px] md:min-h-[310px] md:max-h-[310px] flex flex-col rounded-xl bg-card overflow-hidden border transition-transform transform hover:scale-105 hover:border-gray-300 hover:shadow-lg p-2 text-left relative group ${className}`}
         className={`relative w-50 h-auto min-h-[270px] max-h-[calc(100vh-20px)] flex flex-col rounded-xl bg-card overflow-hidden border transition-transform transform hover:scale-105 hover:border-gray-300 p-2 pb-1 text-left relative group ${className}`}
       >
-        {isOnOffer && <Badge className="absolute right-3">Offer</Badge>}
+        {/* {isOnOffer && <Badge className="absolute right-3">Offer</Badge>} */}
         <div className="flex justify-center items-center">
           <img
             src={
@@ -44,6 +45,8 @@ const ProductCard = ({
                 ? imageToAdd
                 : image
             }
+            height="138"
+            width="138"
             alt="product"
             className={`h-[138px] object-cover ${imgClass}`}
           />
@@ -86,7 +89,7 @@ const ProductCard = ({
               <h2
                 className={`text-[12px] font-bold transition-colors group-hover:text-primary group-hover:underline ${nameClass}`}
               >
-                {name?.length > 17 ? `${name?.substring(0, 17)}...` : name}
+                {name?.length > 15 ? `${name?.substring(0, 15)}...` : name}
               </h2>
             </div>
             <div className={`flex items-center mt-2 ${sectionClass}`}>

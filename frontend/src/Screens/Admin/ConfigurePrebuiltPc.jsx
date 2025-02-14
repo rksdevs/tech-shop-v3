@@ -70,6 +70,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "../../components/ui/dialog";
+import { Helmet } from "react-helmet-async";
 
 const ConfigurePrebuiltPc = ({ children }) => {
   const cart = useSelector((state) => state.cart);
@@ -99,6 +100,7 @@ const ConfigurePrebuiltPc = ({ children }) => {
     headphone,
     cabinet,
     totalBuildPrice,
+    totalActualPrice,
   } = useSelector((state) => state.PcConfigure);
   const [section, setSection] = useState("Processor");
   const { shippingAddress } = cart;
@@ -158,15 +160,15 @@ const ConfigurePrebuiltPc = ({ children }) => {
     { isLoading: createPCLoading, error: createPCError },
   ] = useCreateNewPrebuiltPcMutation();
 
-  const {
-    data: allPrebuiltPcs,
-    isLoading: allPrebuiltPcsLoading,
-    error: allPrebuiltPcsError,
-  } = useGetAllPrebuiltPcsQuery();
+  // const {
+  //   data: allPrebuiltPcs,
+  //   isLoading: allPrebuiltPcsLoading,
+  //   error: allPrebuiltPcsError,
+  // } = useGetAllPrebuiltPcsQuery();
 
   const handleMerlinQuery = async (e) => {
     e.preventDefault();
-    console.log("Hi I'm HALO!");
+    console.log("Hi I'm MERLIN!");
   };
 
   const handleDeleteSelection = (item) => {
@@ -182,6 +184,7 @@ const ConfigurePrebuiltPc = ({ children }) => {
       !pcImage ||
       !pcUses ||
       !totalBuildPrice ||
+      !totalActualPrice ||
       !platform ||
       !cpu ||
       !motherboard ||
@@ -204,6 +207,7 @@ const ConfigurePrebuiltPc = ({ children }) => {
         pcImage,
         countInStock,
         pcTotalPrice: totalBuildPrice,
+        pcActualPrice: totalActualPrice,
         pcComponents: {
           cpu,
           gpu,
@@ -270,6 +274,14 @@ const ConfigurePrebuiltPc = ({ children }) => {
 
   return (
     <div className="flex w-full flex-col gap-8">
+      <Helmet>
+        <title>Configure Pre-built PC Admin</title>
+        <meta
+          name="description"
+          content="Admin page to configure pre-built pcs"
+        />
+        <link rel="canonical" href="/admin/configurePrebuiltPc" />
+      </Helmet>
       <Container className="flex flex-col gap-4">
         <div className="flex flex-col gap-4">
           <div className="section-heading flex justify-center mt-4">
@@ -822,15 +834,22 @@ const ConfigurePrebuiltPc = ({ children }) => {
                               </span>
                               <span>
                                 ₹{" "}
-                                {Number(
-                                  totalBuildPrice - totalBuildPrice * 0.18
-                                ).toFixed(2)}
+                                <span>
+                                  {Number(
+                                    totalActualPrice - totalActualPrice * 0.18
+                                  ).toFixed(2)}
+                                </span>
+                                <span className="text-muted-foreground line-through text-[10px]">
+                                  {Number(
+                                    totalBuildPrice - totalBuildPrice * 0.18
+                                  ).toFixed(2)}
+                                </span>
                               </span>
                             </li>
                             <li className="flex items-center justify-between">
                               <span className="text-muted-foreground">Tax</span>
                               <span>
-                                ₹ {Number(totalBuildPrice * 0.18).toFixed(2)}
+                                ₹ {Number(totalActualPrice * 0.18).toFixed(2)}
                               </span>
                             </li>
                             <li className="flex items-center justify-between font-semibold">
@@ -838,7 +857,13 @@ const ConfigurePrebuiltPc = ({ children }) => {
                                 Total
                               </span>
                               <span>
-                                ₹ {Number(totalBuildPrice).toFixed(2)}
+                                ₹{" "}
+                                <span>
+                                  {Number(totalActualPrice).toFixed(2)}
+                                </span>
+                                <span className="text-muted-foreground line-through text-[10px]">
+                                  {Number(totalBuildPrice).toFixed(2)}
+                                </span>
                               </span>
                             </li>
                           </ul>
@@ -937,7 +962,7 @@ const ConfigurePrebuiltPc = ({ children }) => {
                                 <Input
                                   id="totalPrice"
                                   className="w-4/5 text-xs"
-                                  value={totalBuildPrice}
+                                  value={Number(totalActualPrice).toFixed(2)}
                                   readOnly
                                   // onChange={(e) => setPcTotalPrice(e.target.value)}
                                 />
@@ -978,6 +1003,8 @@ const ConfigurePrebuiltPc = ({ children }) => {
                                 : pcImage
                             }
                             alt="custom pc"
+                            height="200"
+                            width="200"
                             className="w-[200px] h-[200px]"
                           />
                           <CardTitle>{pcName || "Not Decided"}</CardTitle>
@@ -1023,10 +1050,17 @@ const ConfigurePrebuiltPc = ({ children }) => {
                               <IndianRupee />
                               <div className="space-y-1 text-left">
                                 <p className="text-sm font-medium leading-none">
-                                  Budget
+                                  Price
                                 </p>
                                 <p className="text-sm text-muted-foreground">
-                                  Between ₹ {totalBuildPrice || "Not added"}
+                                  ₹{" "}
+                                  <span>
+                                    {Number(totalActualPrice).toFixed(2) ||
+                                      "Not added"}
+                                  </span>{" "}
+                                  <span className="text-[10px] text-muted-foreground line-through">
+                                    {Number(totalBuildPrice).toFixed(2) || ""}
+                                  </span>
                                 </p>
                               </div>
                             </div>

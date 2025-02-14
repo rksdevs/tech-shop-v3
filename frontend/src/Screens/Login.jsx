@@ -17,6 +17,7 @@ import { setCredentials } from "../Features/authSlice";
 import { useToast } from "../components/ui/use-toast";
 import GoogleAuthLogin from "../components/GoogleAuthLogin";
 import { Eye, EyeOff } from "lucide-react";
+import { Helmet } from "react-helmet-async";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -52,6 +53,14 @@ const Login = () => {
   };
   return (
     <div className="flex flex-col w-full justify-center min-h-[63vh]">
+      <Helmet>
+        <title>Login Page</title>
+        <meta
+          name="description"
+          content="Login to your account here, and browse our website."
+        />
+        <link rel="canonical" href="/login" />
+      </Helmet>
       <Container>
         <Card className="mx-auto max-w-sm">
           <CardHeader>

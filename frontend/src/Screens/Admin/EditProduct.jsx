@@ -32,6 +32,7 @@ import {
   useDeleteReviewMutation,
   useGetAllBrandsQuery,
   useGetAllCategoriesQuery,
+  useGetProductDetailsBySlugQuery,
   useGetProductDetailsQuery,
   useUpdateProductMutation,
   useUploadImageMutation,
@@ -56,9 +57,10 @@ import {
   TabsTrigger,
 } from "../../components/ui/tabs";
 import { ScrollArea } from "../../components/ui/scroll-area";
+import { Helmet } from "react-helmet-async";
 
 function EditProduct() {
-  const { id: productId } = useParams();
+  const { id: productId, slug: productSlug } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -68,7 +70,7 @@ function EditProduct() {
     isLoading: productLoading,
     isError: productError,
     refetch,
-  } = useGetProductDetailsQuery(productId);
+  } = useGetProductDetailsBySlugQuery(productSlug);
 
   const {
     data: allCategories,
@@ -98,6 +100,7 @@ function EditProduct() {
   const [openOtherSpecDialog, setOpenOtherSpecDialog] = useState(false);
 
   const [name, setName] = useState(product?.name || "");
+  const [slug, setSlug] = useState(product?.slug || "");
   const [description, setDescription] = useState(product?.description || "");
   const [image, setImage] = useState(product?.image || "");
   const [sku, setSku] = useState(product?.sku || "");
@@ -109,8 +112,8 @@ function EditProduct() {
   const [productDiscount, setProductDiscount] = useState(
     product?.productDiscount || 0
   );
-  // const [isOnOffer, setIsOnOffer] = useState(product?.isOnOffer || false);
-  // const [offerName, setOfferName] = useState(product?.offerName || "");
+  const [isOnOffer, setIsOnOffer] = useState(product?.isOnOffer || false);
+  const [offerName, setOfferName] = useState(product?.offerName || "");
   const [socketType, setSocketType] = useState(
     product?.compatibilityDetails?.socketType || ""
   );
@@ -362,6 +365,7 @@ function EditProduct() {
     try {
       const res = await updateProduct({
         name,
+        slug,
         description,
         image,
         sku,
@@ -369,6 +373,8 @@ function EditProduct() {
         brand,
         price,
         currentPrice,
+        offerName,
+        isOnOffer,
         countInStock,
         productDiscount,
         socketType,
@@ -378,7 +384,7 @@ function EditProduct() {
         memorySlots,
         ramType,
         ramFormFactor,
-        productId,
+        productId: product?._id,
         warrantyDetails,
         featureDetails: {
           featureOne,
@@ -436,6 +442,7 @@ function EditProduct() {
     if (product?.name) {
       setOtherFeatures(product.otherFeatures);
       setName(product?.name);
+      setSlug(product?.slug);
       setDescription(product?.description);
       setImage(product?.image);
       setSku(product?.sku);
@@ -445,8 +452,8 @@ function EditProduct() {
       setCurrentPrice(product?.currentPrice);
       setCountInStock(product?.countInStock);
       setProductDiscount(product?.productDiscount);
-      // setIsOnOffer(product?.isOnOffer);
-      // setOfferName(product?.offerName || "");
+      setIsOnOffer(product?.isOnOffer);
+      setOfferName(product?.offerName || "");
       setSocketType(product?.compatibilityDetails?.socketType);
       setPowerConsumption(product?.compatibilityDetails?.powerConsumption);
       setChipsetModel(product?.compatibilityDetails?.chipsetModel);
@@ -637,8 +644,19 @@ function EditProduct() {
     setCurrentPrice(price - (price * value) / 100);
   };
 
+  useEffect(() => {
+    if (offerName !== "") {
+      setIsOnOffer(true);
+    }
+  }, [offerName]);
+
   return (
     <div className="flex w-full gap-6">
+      <Helmet>
+        <title>Edit Product Admin Page</title>
+        <meta name="description" content="Admin page to edit product details" />
+        <link rel="canonical" href="/admin/allproducts/editProduct/:id" />
+      </Helmet>
       <Container className="flex flex-col gap-8 p-4">
         {productLoading ? (
           <>Loading..</>
@@ -926,15 +944,14 @@ function EditProduct() {
                         }`}
                       >
                         {product?.isOnOffer
-                          ? "Current on below offer"
+                          ? product?.offerName
                           : "Not on offer"}
                       </CardDescription>
                     </CardHeader>
                     <CardContent>
                       <div className="grid gap-6">
-                        {product?.isOnOffer ? (
+                        {/* {product?.isOnOffer ? (
                           <div className="grid gap-3">
-                            {/* <Input placeholder={product?.offerName} readOnly /> */}
                             <Input
                               defaultValue={product?.offerName}
                               readOnly
@@ -945,8 +962,42 @@ function EditProduct() {
                           <div className="grid gap-3">
                             <Input placeholder="No offer applied" readOnly />
                           </div>
-                        )}
+                        )} */}
                       </div>
+                      <Label htmlFor="offerName" className="text-right">
+                        Select Offer to apply
+                      </Label>
+                      <Select
+                        value={offerName}
+                        onValueChange={(e) => setOfferName(e)}
+                      >
+                        <SelectTrigger
+                          id="offerName"
+                          aria-label="Select Offername"
+                          className="col-span-3"
+                        >
+                          <SelectValue placeholder="Offer name" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {/* <SelectItem value="Desktop">Desktop</SelectItem>
+                          <SelectItem value="Laptop">Laptop</SelectItem>
+                          <SelectItem value="NA">Not Applicable</SelectItem> */}
+                          {allOffers
+                            ?.filter(
+                              (offer) =>
+                                offer.offerDiscount === 0 &&
+                                offer.status === "Active"
+                            )
+                            ?.map((offer) => (
+                              <SelectItem
+                                value={offer.offerName}
+                                key={offer?._id}
+                              >
+                                {offer.offerName}
+                              </SelectItem>
+                            ))}
+                        </SelectContent>
+                      </Select>
                     </CardContent>
                   </Card>
                   <Card
@@ -971,6 +1022,8 @@ function EditProduct() {
                               : image
                           }
                           alt="upload sample img"
+                          height="80"
+                          width="80"
                           className="aspect-square w-full rounded-md object-cover"
                         />
                       </div>

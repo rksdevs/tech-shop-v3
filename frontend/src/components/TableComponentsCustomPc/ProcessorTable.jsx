@@ -207,9 +207,8 @@ const ProcessorTable = ({
           break;
       }
     }
-    // console.log(closeDialog);
-    setTableActionDropdownOpen(false);
-    closeDialog(false);
+    // setTableActionDropdownOpen(false);
+    // closeDialog(false);
   };
 
   const columnHelper = createColumnHelper();
@@ -218,7 +217,7 @@ const ProcessorTable = ({
     columnHelper.accessor((row) => row, {
       id: "Product",
       cell: (info) => (
-        <Link to={`/product/${info.getValue()?._id}`}>
+        <Link to={`/product/${info.getValue()?.slug}`}>
           <img
             src={
               info.getValue()?.image === "/images/sample.jpg"
@@ -226,6 +225,8 @@ const ProcessorTable = ({
                 : info.getValue()?.image
             }
             alt="product-img"
+            height="40"
+            width="40"
             className="w-[40px] h-[40px]"
           />
         </Link>
@@ -255,11 +256,11 @@ const ProcessorTable = ({
       ),
     }),
     {
-      accessorKey: "brand",
-      header: "Brand",
+      accessorKey: "countInStock",
+      header: "Stock",
       className: "hidden sm:table-cell",
     },
-    columnHelper.accessor((row) => row.price, {
+    columnHelper.accessor((row) => row.currentPrice, {
       accessorKey: "price",
       header: ({ column }) => {
         return (
@@ -268,14 +269,14 @@ const ProcessorTable = ({
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
             className=""
           >
-            Price
+            Current Price
             <CaretSortIcon className="ml-2 h-4 w-4" />
           </Button>
         );
       },
       cell: (info) => (
         <p className="flex items-center justify-center pr-4">
-          ₹ {info.getValue()}
+          ₹ {info.getValue().toFixed(0)}
         </p>
       ),
     }),
@@ -284,6 +285,7 @@ const ProcessorTable = ({
       cell: (info) => (
         <Button
           onClick={(e) => handleAddItem(e, info.getValue())}
+          // onClick={(e) => console.log(e, info.getValue())}
           className="cursor-pointer"
         >
           Add

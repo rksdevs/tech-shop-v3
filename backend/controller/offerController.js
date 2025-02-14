@@ -56,7 +56,10 @@ const updateOffer = asyncHandler(async(req, res)=> {
                 if(productsToUpdate.length) {
                     let productPromise = productsToUpdate.map(async(product)=> {
                         product.isOnOffer = false;
-                        product.productDiscount = 0;
+                        if (offerDiscount !== 0 || currentDiscount !== 0) {
+                            product.productDiscount = 0;
+                        }
+                        product.offerName = "";
                         // product.price = product.price + (product.price*currentDiscount/100)
                         // product.priceAfterDiscount = product.price;
                         await product.save();
@@ -70,7 +73,10 @@ const updateOffer = asyncHandler(async(req, res)=> {
                 const productsToUpdate = await Product.find({offerName:currentOfferName})
                 if(productsToUpdate.length) {
                     let productPromise = productsToUpdate.map(async(product)=> {
-                        product.productDiscount = offerDiscount;
+                        // product.productDiscount = offerDiscount;
+                        if (offerDiscount !== 0 || currentDiscount !== 0) {
+                            product.productDiscount = offerDiscount;
+                        }
                         product.offerName = offerName;
                         await product.save();
                     })
@@ -83,7 +89,10 @@ const updateOffer = asyncHandler(async(req, res)=> {
                 const productsToUpdate = await Product.find({offerName:currentOfferName})
                 if(productsToUpdate.length) {
                     let productPromise = productsToUpdate.map(async(product)=> {
-                        product.productDiscount = offerDiscount;
+                        // product.productDiscount = offerDiscount;
+                        if (offerDiscount !== 0 || currentDiscount !== 0) {
+                            product.productDiscount = offerDiscount;
+                        }
                         product.offerName = offerName;
                         await product.save();
                     })
@@ -171,7 +180,9 @@ const updateProductOffer = asyncHandler(async(req, res)=> {
             //update their productDiscount, isOnOffer, offerName
             const productsPromise = getProductsByCategory.map(async (productToUpdate)=> {
                 // const updatedPrice = productToUpdate.price - (productToUpdate.price* offer.offerDiscount/100)
-                productToUpdate.productDiscount = offer.offerDiscount;
+                if(offer.offerDiscount !== 0) {
+                    productToUpdate.productDiscount = offer.offerDiscount;
+                }
                 // productToUpdate.price = updatedPrice;
                 productToUpdate.isOnOffer = true;
                 productToUpdate.offerName = offer.offerName;

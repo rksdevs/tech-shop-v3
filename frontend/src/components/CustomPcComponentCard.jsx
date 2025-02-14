@@ -109,10 +109,12 @@ const CustomPcComponentCard = ({
         <CardTitle>{category}</CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col md:flex-row items-center justify-between p-6 py-4 gap-4">
-        <Link to={`/product/${component?._id}`}>
+        <Link to={`/product/${component?.slug}`}>
           <img
             src={component?.image}
             alt="processor"
+            height="175"
+            width="175"
             className="h-[175px] w-[175px]"
           />
         </Link>
@@ -129,7 +131,7 @@ const CustomPcComponentCard = ({
           </div>
         </div>
         <div className="text-primary font-medium">
-          ₹ {component?.currentPrice}
+          ₹ {Number(component?.currentPrice.toFixed(2))}
         </div>
         <div className="flex gap-2">
           <Dialog
