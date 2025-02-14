@@ -107,12 +107,11 @@ export function NavbarMiddle() {
         <Container className="flex items-center mx-0 px-0">
           <div className="flex w-full items-center flex-row">
             <h1 className="sr-only">
-              Computermakers - India's First AI Powered website for PCs &
-              Laptops.
+              Tech-shop - India's First AI Powered website for PCs & Laptops.
             </h1>
             <Link to="/">
               <h2 className="text-[20px] md:text-[24px] font-semibold flex flex-row items-center">
-                COMPUTERMAKERS
+                TECH-SHOP
                 <div className="text-primary text-[48px] mt-[5px] flex h-[50px] items-end">
                   .
                 </div>

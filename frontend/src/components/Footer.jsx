@@ -15,22 +15,19 @@ const Footer = () => {
       <Container className="flex w-full flex-col lg:flex-row gap-4 lg:gap-0 items-center justify-between my-0 lg:my-8">
         <div className="flex w-full items-center flex-col footer-left flex-grow-0 flex-shrink-0 basis-1/4">
           <h2 className="text-[24px] font-semibold flex flex-row items-center">
-            COMPUTERMAKERS
+            TECH-SHOP
             <div className="text-primary text-[48px] flex h-[50px] mt-[5px] items-end">
               .
             </div>
           </h2>
           <div className="flex flex-rows items-center gap-[5px]">
             <Link
-              to="https://www.instagram.com/computermakers/"
+              to="https://www.instagram.com/bluemoon_rakesh/"
               target="_blank"
             >
               <Instagram className="h-[14px]" />
             </Link>
-            <Link
-              to="https://www.youtube.com/channel/UCRTgzMMWu1xZMlC0zDcNi_w"
-              target="_blank"
-            >
+            <Link to="https://www.youtube.com/@rks_devs_24" target="_blank">
               <Youtube className="h-[14px]" />
             </Link>
           </div>

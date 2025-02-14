@@ -9,7 +9,7 @@ import {
 import Container from "../components/Container";
 import { Clock3, Mail, Mailbox, MapPin, Phone, PhoneCall } from "lucide-react";
 import { Link } from "react-router-dom";
-import shop2 from "../components/assets/images/shop2.jpeg";
+import shop2 from "../components/assets/images/Programming.jpg";
 import { Helmet } from "react-helmet-async";
 
 const ContactUs = () => {
@@ -36,7 +36,7 @@ const ContactUs = () => {
               <CardContent className="flex flex-col items-center gap-4 justify-between p-0">
                 <div className="flex gap-2 text-[28px] font-semibold items-center">
                   <Phone className="w-6 h-6" />
-                  <span>9876543210</span>
+                  <span>7044002013</span>
                 </div>
               </CardContent>
               <CardFooter className="flex justify-end pt-8">
@@ -50,7 +50,7 @@ const ContactUs = () => {
               <CardContent className="flex flex-col gap-4 justify-between p-4">
                 <div className="flex gap-2 text-l font-semibold items-center">
                   <Mail className="w-6 h-6" />
-                  <span>support@computermakers.in</span>
+                  <span>mailto.dev.rakesh@gmail.com</span>
                 </div>
                 <CardFooter className="flex justify-end p-0 pt-4">
                   <div className="text-muted-foreground">for any enquiries</div>
@@ -65,11 +65,11 @@ const ContactUs = () => {
                 <div className="flex gap-2 text-sm font-semibold items-start flex-col justify-start">
                   <span className="flex gap-2 items-center">
                     {" "}
-                    <Mailbox className="w-4 h-4" /> No.136
+                    <Mailbox className="w-4 h-4" /> No.304
                   </span>
-                  <span>Amar Radio Building</span>
-                  <span>Sadar Patrappa Rd</span>
-                  <span>Bengaluru, Karnataka 560002</span>
+                  <span>SM Residency</span>
+                  <span>Bangalore</span>
+                  <span>Karnataka 560002</span>
                 </div>
               </CardContent>
             </Card>
@@ -83,8 +83,7 @@ const ContactUs = () => {
                 <CardHeader className="bg-muted/50 text-left pb-1 gap-3">
                   <CardTitle>BANGALORE</CardTitle>
                   <CardDescription>
-                    No.136, Amar Radio Building Sadar Patrappa Rd Bengaluru,
-                    Karnataka 560002
+                    304, SM Residency, Bengaluru, Karnataka 560002
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="flex flex-col gap-4 p-4">
@@ -94,16 +93,16 @@ const ContactUs = () => {
                   </div>
                   <div className="flex gap-4 p-2">
                     <PhoneCall />
-                    <span>9876543210</span>
+                    <span>7044002013</span>
                   </div>
                   <div className="flex gap-4 p-2">
                     <Mail />
-                    <span>support@computermakers.in</span>
+                    <span>mailto.dev.rakesh@gmail.com</span>
                   </div>
                   <div className="flex gap-4 p-2">
                     <MapPin />
                     <Link
-                      to="https://maps.app.goo.gl/gHNXnQUScsJK38pbA"
+                      to="https://maps.app.goo.gl/ucLUox8uN6dBHYcL9"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="font-medium"

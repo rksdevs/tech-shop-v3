@@ -18,7 +18,7 @@ import {
 import { useEffect, useState } from "react";
 import { Button } from "../components/ui/button";
 import { useGetAboutAdminDetailsQuery } from "../Features/aboutAdminApiSlice";
-import instaPic from "../components/assets/images/instaPic.jpg";
+import instaPic from "../components/assets/images/insta_pic.jpg";
 import {
   Carousel,
   CarouselContent,
@@ -66,8 +66,8 @@ const AboutUs = () => {
                   />
                   <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
-                <CardTitle>Neal Raj</CardTitle>
-                <CardDescription>Owner</CardDescription>
+                <CardTitle>Rakesh</CardTitle>
+                <CardDescription>Developer</CardDescription>
               </CardHeader>
             </Card>
             <Card className="h-fit">
@@ -79,8 +79,8 @@ const AboutUs = () => {
                   />
                   <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
-                <CardTitle>Karan Raj</CardTitle>
-                <CardDescription>Co-Owner</CardDescription>
+                <CardTitle>Rakesh</CardTitle>
+                <CardDescription>Designer</CardDescription>
               </CardHeader>
             </Card>
           </div>
@@ -207,7 +207,7 @@ const AboutUs = () => {
                       <AvatarFallback>CN</AvatarFallback>
                     </Avatar>
                     <div className="flex flex-col gap-4">
-                      <CardTitle>{`@computermakers`}</CardTitle>
+                      <CardTitle>{`@bluemoon_rakesh`}</CardTitle>
                       <div className="flex gap-4">
                         <CardDescription className="flex flex-col">
                           <span className="text-sm font-bold text-black">
