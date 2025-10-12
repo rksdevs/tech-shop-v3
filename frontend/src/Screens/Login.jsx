@@ -106,7 +106,7 @@ const Login = () => {
                   onClick={togglePasswordView}
                 />
                 <EyeOff
-                  className={`h-4 w-4 absolute absolute top-[38px] right-[10px] text-primary hover:cursor-pointer ${
+                  className={`h-4 w-4 absolute top-[38px] right-[10px] text-primary hover:cursor-pointer ${
                     !showPassword ? "hidden" : ""
                   }`}
                   onClick={togglePasswordView}
